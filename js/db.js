@@ -1,5 +1,5 @@
 // Firebase: вход через Google и база. Библиотеки грузятся только когда нужны (как в «Кабинке»).
-import { FIREBASE } from './config.js?v=884b33e3';
+import { FIREBASE } from './config.js?v=62fbc0c3';
 
 const V = 'https://www.gstatic.com/firebasejs/10.14.1/';
 let appPromise;

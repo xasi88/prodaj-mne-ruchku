@@ -1,8 +1,8 @@
 // Приложение: экраны по адресу после #. Главная, настройки, версии, разбор книг (автор).
-import { ETAPY } from './etapy.js?v=884b33e3';
-import { VERSIONS, VERSION } from './versions.js?v=884b33e3';
-import * as db from './db.js?v=884b33e3';
-import { knigiGlavnaya, knigiEtap, knigiItog, kniga, zanyatie } from './knigi.js?v=884b33e3';
+import { ETAPY } from './etapy.js?v=62fbc0c3';
+import { VERSIONS, VERSION } from './versions.js?v=62fbc0c3';
+import * as db from './db.js?v=62fbc0c3';
+import { knigiGlavnaya, knigiEtap, knigiItog, kniga, zanyatie } from './knigi.js?v=62fbc0c3';
 
 const app = document.getElementById('app');
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -104,7 +104,8 @@ async function zagruzitKnigi() {
 
 app.addEventListener('click', async (e) => {
   if (zanyatie(e)) return;
-  const t = e.target.closest('[data-tema]');
+  // Только кнопка темы: у <html> тоже есть data-tema, closest нашёл бы его при любом нажатии.
+  const t = e.target.closest('button.tema[data-tema]');
   if (t) { tema(t.dataset.tema); hran('tema', t.dataset.tema); render(); return; }
   const b = e.target.closest('[data-do]');
   if (!b) return;
