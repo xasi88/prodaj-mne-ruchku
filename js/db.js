@@ -1,5 +1,5 @@
 // Firebase: вход через Google и база. Библиотеки грузятся только когда нужны (как в «Кабинке»).
-import { FIREBASE } from './config.js?v=73b41d29';
+import { FIREBASE } from './config.js?v=884b33e3';
 
 const V = 'https://www.gstatic.com/firebasejs/10.14.1/';
 let appPromise;
@@ -27,6 +27,8 @@ export async function sledit(cb) {
   m.onAuthStateChanged(auth, cb);
 }
 
+// Вход окном Google. Переход на страницу Google не годится: Chrome не отдаёт данные входа
+// с адреса firebaseapp.com (проверено 2026-11-21). Окно открывается только от нажатия человека.
 export async function voyti() {
   const { m, auth } = await authApi();
   await m.signInWithPopup(auth, new m.GoogleAuthProvider());

@@ -1,8 +1,8 @@
 // Приложение: экраны по адресу после #. Главная, настройки, версии, разбор книг (автор).
-import { ETAPY } from './etapy.js?v=73b41d29';
-import { VERSIONS, VERSION } from './versions.js?v=73b41d29';
-import * as db from './db.js?v=73b41d29';
-import { knigiGlavnaya, knigiEtap, knigiItog, kniga, zanyatie } from './knigi.js?v=73b41d29';
+import { ETAPY } from './etapy.js?v=884b33e3';
+import { VERSIONS, VERSION } from './versions.js?v=884b33e3';
+import * as db from './db.js?v=884b33e3';
+import { knigiGlavnaya, knigiEtap, knigiItog, kniga, zanyatie } from './knigi.js?v=884b33e3';
 
 const app = document.getElementById('app');
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -120,7 +120,9 @@ app.addEventListener('click', async (e) => {
       render();
     }
   } catch (err) {
-    soob = 'Не получилось: ' + (err.code || err.message || 'ошибка') + '. Попробуйте ещё раз.';
+    soob = err.code === 'auth/popup-blocked'
+      ? 'Браузер не открыл окно входа. Разрешите всплывающие окна для этого сайта и нажмите «Войти» ещё раз.'
+      : 'Не получилось: ' + (err.code || err.message || 'ошибка') + '. Попробуйте ещё раз.';
     location.hash = '';
     render();
   }
