@@ -1,8 +1,8 @@
 // Приложение: экраны по адресу после #. Главная с картой, место, сцена, настройки, версии, разбор книг (автор).
-import { VERSIONS, VERSION } from './versions.js?v=3032a635';
-import * as db from './db.js?v=3032a635';
-import { knigiGlavnaya, knigiEtap, knigiItog, kniga, zanyatie } from './knigi.js?v=3032a635';
-import { karta, mesto, scena, sbrosKnopka, igraKlik } from './igra.js?v=3032a635';
+import { VERSIONS, VERSION } from './versions.js?v=466b0be8';
+import * as db from './db.js?v=466b0be8';
+import { knigiGlavnaya, knigiEtap, knigiItog, kniga, zanyatie } from './knigi.js?v=466b0be8';
+import { karta, mesto, scena, sbrosKnopka, igraKlik } from './igra.js?v=466b0be8';
 
 const app = document.getElementById('app');
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -25,6 +25,20 @@ function tema(t) {
   document.documentElement.dataset.tema = t;
   const c = getComputedStyle(document.documentElement).getPropertyValue('--fon').trim();
   document.querySelector('meta[name="theme-color"]')?.setAttribute('content', c);
+}
+
+// Весь экран. Браузер разрешает его только после нажатия, поэтому включаем на первом нажатии.
+// Выбор «в окне» помним: тогда сами экран не разворачиваем.
+const vesEst = () => Boolean(document.fullscreenElement) || matchMedia('(display-mode: fullscreen)').matches;
+function vesEkran(da) {
+  const p = da ? document.documentElement.requestFullscreen?.() : document.exitFullscreen?.();
+  p?.catch?.(() => {});
+}
+function pervoeNazhatie(e) {
+  // Вход открывает окно Google: оно сразу выбило бы нас из полного экрана. Ждём следующего нажатия.
+  if (e.target.closest?.('[data-do="voyti"], [data-do="ekran"]')) return;
+  document.removeEventListener('click', pervoeNazhatie, true);
+  if (hran('ekran') !== 'okno' && !vesEst()) vesEkran(true);
 }
 
 function vhod() {
@@ -57,6 +71,7 @@ function nastroyki() {
     : '<p class="note">Вход появится, когда подключим базу.</p>';
   return `<a class="back" href="#">‹ Главная</a><h2>Настройки</h2>
   <div class="razdel">Тема</div><div class="temy">${temy}</div>
+  ${document.documentElement.requestFullscreen ? `<div class="razdel">Экран</div><button class="vtor" type="button" data-do="ekran">${document.fullscreenElement ? 'Свернуть в окно' : 'На весь экран'}</button>` : ''}
   <div class="razdel">Игра</div>${sbrosKnopka()}
   <div class="razdel">Аккаунт</div>${akk}`;
 }
@@ -112,6 +127,12 @@ app.addEventListener('click', async (e) => {
   if (t) { tema(t.dataset.tema); hran('tema', t.dataset.tema); render(); return; }
   const b = e.target.closest('[data-do]');
   if (!b) return;
+  if (b.dataset.do === 'ekran') {
+    const da = !document.fullscreenElement;
+    hran('ekran', da ? 'ves' : 'okno');
+    vesEkran(da);
+    return;
+  }
   try {
     if (b.dataset.do === 'voyti') await db.voyti();
     if (b.dataset.do === 'vyyti') { await db.vyyti(); location.hash = ''; }
@@ -134,6 +155,8 @@ app.addEventListener('click', async (e) => {
 
 tema(hran('tema') || 'rynok');
 window.addEventListener('hashchange', render);
+document.addEventListener('click', pervoeNazhatie, true);
+document.addEventListener('fullscreenchange', () => { if (location.hash === '#nastroyki') render(); });
 render();
 db.sledit(async (u) => {
   user = u;
