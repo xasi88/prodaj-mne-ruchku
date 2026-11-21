@@ -1,8 +1,8 @@
 // Приложение: экраны по адресу после #. Главная с картой, место, сцена, настройки, версии, разбор книг (автор).
-import { VERSIONS, VERSION } from './versions.js?v=466b0be8';
-import * as db from './db.js?v=466b0be8';
-import { knigiGlavnaya, knigiEtap, knigiItog, kniga, zanyatie } from './knigi.js?v=466b0be8';
-import { karta, mesto, scena, sbrosKnopka, igraKlik } from './igra.js?v=466b0be8';
+import { VERSIONS, VERSION } from './versions.js?v=d2c9bc4e';
+import * as db from './db.js?v=d2c9bc4e';
+import { knigiGlavnaya, knigiEtap, knigiItog, kniga, zanyatie } from './knigi.js?v=d2c9bc4e';
+import { karta, mesto, scena, sbrosKnopka, igraKlik, mirHtml } from './igra.js?v=d2c9bc4e';
 
 const app = document.getElementById('app');
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -54,6 +54,7 @@ function glavnaya() {
     : '';
   return `<header class="top"><img src="img/znachok-192.png" alt="" width="64" height="64"><div class="zag"><h1>Продай мне ручку</h1><div class="sub">Продажи без уговоров</div></div>${vhod()}</header>
   ${soob ? `<div class="soob">${esc(soob)}</div>` : ''}
+  <a class="main-btn" href="#mir">Войти в город: проба 3D</a>
   ${karta()}
   <div class="blok ruchka"><div class="row"><span>Задание «Продай мне ручку»</span><span class="state">скоро</span></div>
   <p class="note">Первое и последнее задание игры. Вы продаёте ручку как умеете. В конце сделаете это снова и увидите свой рост.</p></div>
@@ -102,9 +103,31 @@ function ekran() {
   return glavnaya();
 }
 
+// 3D-мир живёт вне обычной перерисовки: холст нельзя стирать, пока человек в мире.
+let mirZakryt = null;
+async function mirOtkryt() {
+  app.innerHTML = mirHtml();
+  mirZakryt = () => {};
+  try {
+    const { otkryt } = await import('./mir.js?v=d2c9bc4e');
+    if (location.hash !== '#mir') return;
+    const blok = app.querySelector('.mir');
+    mirZakryt = otkryt(blok, (da) => {
+      blok.querySelector('.mir-panel').hidden = !da;
+      blok.querySelector('.mir-podskazka').hidden = da;
+    });
+  } catch {
+    mirZakryt = null;
+    soob = '3D-мир не открылся на этом устройстве.';
+    location.hash = '';
+  }
+}
+
 let last = null;
 function render() {
   const h = location.hash;
+  if (h === '#mir') { if (!mirZakryt) mirOtkryt(); last = h; return; }
+  if (mirZakryt) { mirZakryt(); mirZakryt = null; }
   app.innerHTML = `<div class="view">${ekran()}</div>`;
   if (h !== last) window.scrollTo(0, 0);
   last = h;
@@ -127,6 +150,11 @@ app.addEventListener('click', async (e) => {
   if (t) { tema(t.dataset.tema); hran('tema', t.dataset.tema); render(); return; }
   const b = e.target.closest('[data-do]');
   if (!b) return;
+  if (b.dataset.do === 'otoyti') {
+    b.closest('.mir-panel').hidden = true;
+    app.querySelector('.mir-podskazka').hidden = false;
+    return;
+  }
   if (b.dataset.do === 'ekran') {
     const da = !document.fullscreenElement;
     hran('ekran', da ? 'ves' : 'okno');

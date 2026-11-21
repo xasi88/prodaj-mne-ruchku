@@ -45,6 +45,33 @@
   color-scheme: light;
 }
 
+/* Цвета 3D-мира: одни для всех тем, их читает js/mir.js */
+:root {
+  --mir-nebo: #cfe6dc;
+  --mir-zemlya: #dcc9a0;
+  --mir-doroga: #c9b388;
+  --mir-stena: #f1e6cf;
+  --mir-krysha: #b5533c;
+  --mir-listva: #2f7d55;
+  --mir-stvol: #7a5a3c;
+  --mir-doska: #9b7448;
+  --mir-naves-1: #ffb627;
+  --mir-naves-2: #0f6b4f;
+  --mir-naves-3: #c8452f;
+  --mir-tovar-1: #e2572b;
+  --mir-tovar-2: #f2c230;
+  --mir-tovar-3: #6aa84f;
+  --mir-kozha: #d9a57c;
+  --mir-geroy: #1f4e8c;
+  --mir-shtany: #2a2a2e;
+  --mir-storozh: #2e5a3a;
+  --mir-papaha: #55524e;
+  --mir-boroda: #e2e2dc;
+  --mir-metka: #ffb627;
+  --mir-vyveska: #0a3d2e;
+  --mir-vyveska-tekst: #ffffff;
+}
+
 :root {
   --shrift-zag: "Russo One", "Arial Black", system-ui, sans-serif;
   --shrift: "Manrope", "Segoe UI", system-ui, sans-serif;

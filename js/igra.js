@@ -1,9 +1,9 @@
 // Игра: карта города, место, сцена с тремя ответами. Прохождение хранит память браузера (ключ igra).
 // Данные сцен собирает tools/sceny-v-igru.py, счёт и порядок считает schet.js.
-import { ETAPY } from './etapy.js?v=466b0be8';
-import { MESTA, GEROY, GOROD } from './dannye/mesta.js?v=466b0be8';
-import { SCENY, NACHALO } from './dannye/sceny.js?v=466b0be8';
-import * as S from './schet.js?v=466b0be8';
+import { ETAPY } from './etapy.js?v=d2c9bc4e';
+import { MESTA, GEROY, GOROD } from './dannye/mesta.js?v=d2c9bc4e';
+import { SCENY, NACHALO } from './dannye/sceny.js?v=d2c9bc4e';
+import * as S from './schet.js?v=d2c9bc4e';
 
 const KLYUCH = 'igra';
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -41,6 +41,16 @@ export function karta() {
   <div class="razdel">Город ${esc(GOROD)}</div>
   <p class="lead">${esc(GEROY)} учится продавать. Выберите место на карте: там ждут учитель и клиенты.</p>
   <nav class="karta" aria-label="Карта города">${rows}</nav>`;
+}
+
+// Экран 3D-мира: холст, кнопка назад, подсказка и разговор с учителем первого места.
+export function mirHtml() {
+  const m = MESTA[0];
+  return `<div class="mir"><canvas aria-label="Город ${esc(GOROD)}: ворота рынка"></canvas>
+  <a class="mir-nazad" href="#">‹ Карта</a>
+  <div class="mir-podskazka">Нажмите на землю: ${esc(GEROY)} пойдёт туда. Нажмите на сторожа у ворот: ${esc(GEROY)} подойдёт к нему.</div>
+  <div class="mir-panel" hidden><h3>${esc(m.uchitel)}</h3><p>«${esc(m.pravilo)}»</p>
+  <a class="main-btn" href="#mesto-${m.etap}">Поговорить</a><button class="vtor" type="button" data-do="otoyti">Отойти</button></div></div>`;
 }
 
 export function mesto(n) {
