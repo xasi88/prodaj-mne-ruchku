@@ -1,8 +1,8 @@
-// Приложение: экраны по адресу после #. Главная, настройки, версии, разбор книг (автор).
-import { ETAPY } from './etapy.js?v=62fbc0c3';
-import { VERSIONS, VERSION } from './versions.js?v=62fbc0c3';
-import * as db from './db.js?v=62fbc0c3';
-import { knigiGlavnaya, knigiEtap, knigiItog, kniga, zanyatie } from './knigi.js?v=62fbc0c3';
+// Приложение: экраны по адресу после #. Главная с картой, место, сцена, настройки, версии, разбор книг (автор).
+import { VERSIONS, VERSION } from './versions.js?v=45403e4b';
+import * as db from './db.js?v=45403e4b';
+import { knigiGlavnaya, knigiEtap, knigiItog, kniga, zanyatie } from './knigi.js?v=45403e4b';
+import { karta, mesto, scena, sbrosKnopka, igraKlik } from './igra.js?v=45403e4b';
 
 const app = document.getElementById('app');
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -35,17 +35,15 @@ function vhod() {
 }
 
 function glavnaya() {
-  const etapy = ETAPY.map((name, i) => `<div class="step closed"><span class="dot">${i + 1}</span><span class="name">${esc(name)}</span><span class="state">скоро</span></div>`).join('');
   const avtor = knigiData
     ? `<div class="razdel">Для автора</div><a class="step tek" href="#knigi"><span class="dot">К</span><span class="name">Разбор книг</span><span class="state">открыть</span></a>`
     : '';
   return `<header class="top"><img src="img/znachok-192.png" alt="" width="64" height="64"><div class="zag"><h1>Продай мне ручку</h1><div class="sub">Продажи без уговоров</div></div>${vhod()}</header>
   ${soob ? `<div class="soob">${esc(soob)}</div>` : ''}
-  <div class="blok"><div class="row"><span>Задание «Продай мне ручку»</span><span class="state">скоро</span></div>
-  <p class="note">Первое задание курса. Вы продаёте ручку как умеете. В конце курса сделаете это снова и увидите свой рост.</p></div>
+  ${karta()}
+  <div class="blok ruchka"><div class="row"><span>Задание «Продай мне ручку»</span><span class="state">скоро</span></div>
+  <p class="note">Первое и последнее задание игры. Вы продаёте ручку как умеете. В конце сделаете это снова и увидите свой рост.</p></div>
   ${avtor}
-  <div class="razdel">Путь по этапам</div>
-  <nav class="path" aria-label="Этапы курса">${etapy}</nav>
   <div class="niz"><a href="#nastroyki">Настройки</a><a href="#versii">Версия ${VERSION}</a></div>`;
 }
 
@@ -59,6 +57,7 @@ function nastroyki() {
     : '<p class="note">Вход появится, когда подключим базу.</p>';
   return `<a class="back" href="#">‹ Главная</a><h2>Настройки</h2>
   <div class="razdel">Тема</div><div class="temy">${temy}</div>
+  <div class="razdel">Игра</div>${sbrosKnopka()}
   <div class="razdel">Аккаунт</div>${akk}`;
 }
 
@@ -76,6 +75,8 @@ function ekran() {
   let m;
   if (h === 'nastroyki') return nastroyki();
   if (h === 'versii') return versii();
+  if ((m = h.match(/^mesto-(\d+)$/))) return mesto(+m[1]) || glavnaya();
+  if ((m = h.match(/^scena-(\d+)$/))) return scena(m[1]) || glavnaya();
   if (/^(knigi|kniga|itog)/.test(h)) {
     if (!knigiData) return `<a class="back" href="#">‹ Главная</a><h2>Разбор книг</h2><p class="lead">Этот раздел видит только автор после входа.</p>${zapis()}`;
     if ((m = h.match(/^kniga-(\d+)$/))) return kniga(knigiData, +m[1]);
@@ -103,6 +104,8 @@ async function zagruzitKnigi() {
 }
 
 app.addEventListener('click', async (e) => {
+  // Игра раньше занятий из книг: у обоих кнопки .opt, игра берёт только свои (data-otvet).
+  if (igraKlik(e)) { render(); return; }
   if (zanyatie(e)) return;
   // Только кнопка темы: у <html> тоже есть data-tema, closest нашёл бы его при любом нажатии.
   const t = e.target.closest('button.tema[data-tema]');

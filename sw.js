@@ -1,7 +1,7 @@
 // Работа без сети: сначала сеть, при ошибке копия. Только свои файлы, база и вход не кэшируются.
 // Номер копии = версия из js/versions.js (тест сверяет). Удаляем только свои копии: префикс проекта.
 const PREFIX = 'prodaj-mne-ruchku-';
-const KESH = PREFIX + '0.1';
+const KESH = PREFIX + '0.2';
 
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (e) => {

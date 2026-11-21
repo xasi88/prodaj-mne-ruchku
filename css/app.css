@@ -150,3 +150,42 @@ ol.list .n { width: 28px; height: 28px; border-radius: 50%; background: var(--gl
   .view { animation: none; }
   .opt { transition: none; }
 }
+
+/* Игра: счёт, карта города, сцена */
+.schet { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 16px 0 8px; }
+.schet div { background: var(--sloy); border: 2px solid var(--kontur); border-radius: var(--knopka-ugly); padding: 12px 16px; min-width: 0; }
+.schet small { display: block; color: var(--tekst-tiho); font-weight: 700; font-size: 14px; }
+.schet b { font: 400 clamp(20px, 6vw, 28px)/1.2 var(--shrift-zag); color: var(--akcent); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.karta { position: relative; display: grid; gap: 14px; margin-top: 16px; padding: 4px 0; }
+.karta::before { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; border-left: 3px dashed var(--liniya); }
+.mesto {
+  position: relative; display: flex; align-items: center; gap: 12px; width: 88%; min-height: 72px;
+  padding: 10px 14px 10px 10px; background: var(--sloy); border: 2px solid var(--kontur);
+  border-radius: var(--knopka-ugly); color: var(--tekst); text-decoration: none; line-height: 1.3;
+}
+.mesto:nth-child(even) { margin-left: auto; }
+.mesto .name { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.mesto .name b { font-weight: 800; }
+.mesto .name small { color: var(--tekst-tiho); font-size: 14px; font-weight: 700; }
+.mesto.tek { background: var(--akcent); color: var(--na-akcente); }
+.mesto.tek .dot { background: var(--na-akcente); color: var(--akcent); border-color: var(--na-akcente); }
+.mesto.tek .state, .mesto.tek .name small { color: var(--na-akcente); }
+.mesto.closed { background: var(--glubina); opacity: 1; }
+.mesto.closed > * { opacity: var(--zakryto); }
+.ruchka { margin-top: 32px; }
+.uchitel { margin-top: 20px; }
+.uchitel h3 { margin-bottom: 6px; }
+.pravilo { font-weight: 800; color: var(--akcent); }
+.book.nov .dot { background: var(--akcent); color: var(--na-akcente); }
+.klient { margin-top: 14px; padding: 14px 16px; background: var(--sloy); border: 2px solid var(--kontur); border-radius: 8px 30px 30px 30px; }
+.klient small { color: var(--tekst-tiho); font-weight: 700; font-size: 14px; }
+.klient p { font-weight: 700; }
+.lesson .ask { margin-bottom: 10px; }
+.itog { margin-top: 20px; }
+.itog h3 { margin-bottom: 6px; }
+.delty { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.delta { padding: 8px 14px; border: 2px solid var(--liniya); border-radius: var(--knopka-ugly); font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.delta.plus { background: var(--akcent); color: var(--na-akcente); border-color: var(--akcent); }
+.sec.example { margin-top: 16px; }
+.sec.example p { margin-bottom: 8px; }
+.why h3 { margin-bottom: 6px; }
