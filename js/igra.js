@@ -1,9 +1,9 @@
 // Игра: карта города, место, сцена с тремя ответами. Прохождение хранит память браузера (ключ igra).
 // Данные сцен собирает tools/sceny-v-igru.py, счёт и порядок считает schet.js.
-import { ETAPY } from './etapy.js?v=45403e4b';
-import { MESTA, GEROY, GOROD } from './dannye/mesta.js?v=45403e4b';
-import { SCENY, NACHALO } from './dannye/sceny.js?v=45403e4b';
-import * as S from './schet.js?v=45403e4b';
+import { ETAPY } from './etapy.js?v=3032a635';
+import { MESTA, GEROY, GOROD } from './dannye/mesta.js?v=3032a635';
+import { SCENY, NACHALO } from './dannye/sceny.js?v=3032a635';
+import * as S from './schet.js?v=3032a635';
 
 const KLYUCH = 'igra';
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));

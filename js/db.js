@@ -1,5 +1,5 @@
 // Firebase: вход через Google и база. Библиотеки грузятся только когда нужны (как в «Кабинке»).
-import { FIREBASE } from './config.js?v=45403e4b';
+import { FIREBASE } from './config.js?v=3032a635';
 
 const V = 'https://www.gstatic.com/firebasejs/10.14.1/';
 let appPromise;
@@ -46,6 +46,15 @@ export async function knigi() {
   const out = {};
   snap.forEach((d) => { out[d.id] = d.data(); });
   return out;
+}
+
+// Убрать документы книг из базы по номерам. Только автор (firestore.rules).
+export async function udalitKnigi(ids) {
+  const { f, db } = await store();
+  const batch = f.writeBatch(db);
+  for (const id of ids) batch.delete(f.doc(db, 'knigi', id));
+  await batch.commit();
+  return ids.length;
 }
 
 // Только на компьютере автора: запись книг из site/_local/knigi.json в базу.

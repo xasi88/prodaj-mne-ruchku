@@ -1,8 +1,8 @@
 // Приложение: экраны по адресу после #. Главная с картой, место, сцена, настройки, версии, разбор книг (автор).
-import { VERSIONS, VERSION } from './versions.js?v=45403e4b';
-import * as db from './db.js?v=45403e4b';
-import { knigiGlavnaya, knigiEtap, knigiItog, kniga, zanyatie } from './knigi.js?v=45403e4b';
-import { karta, mesto, scena, sbrosKnopka, igraKlik } from './igra.js?v=45403e4b';
+import { VERSIONS, VERSION } from './versions.js?v=3032a635';
+import * as db from './db.js?v=3032a635';
+import { knigiGlavnaya, knigiEtap, knigiItog, kniga, zanyatie } from './knigi.js?v=3032a635';
+import { karta, mesto, scena, sbrosKnopka, igraKlik } from './igra.js?v=3032a635';
 
 const app = document.getElementById('app');
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
