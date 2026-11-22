@@ -1,8 +1,8 @@
 // 3D-мир: сцена, камера сверху и сбоку, герой идёт туда, куда нажали пальцем.
 // Сцену строит mir-rynok.js. Цвета берём из css/tokens.css (переменные --mir-*).
-import * as T from './vendor/three.module.js?v=d2c9bc4e';
-import { postroit, chelovek, GRANICY, START, UCHITEL } from './mir-rynok.js?v=d2c9bc4e';
-import { shag } from './mir-hod.js?v=d2c9bc4e';
+import * as T from './vendor/three.module.js?v=32745c8b';
+import { postroit, chelovek, GRANICY, START, UCHITEL } from './mir-rynok.js?v=32745c8b';
+import { shag } from './mir-hod.js?v=32745c8b';
 
 const CVETA = ['nebo', 'zemlya', 'doroga', 'stena', 'krysha', 'listva', 'stvol', 'doska', 'naves-1', 'naves-2', 'naves-3',
   'tovar-1', 'tovar-2', 'tovar-3', 'kozha', 'geroy', 'shtany', 'storozh', 'papaha', 'boroda', 'metka', 'vyveska', 'vyveska-tekst'];

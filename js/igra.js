@@ -1,17 +1,23 @@
-// Игра: карта города, место, сцена с тремя ответами. Прохождение хранит память браузера (ключ igra).
+// Игра: карта города, место, сцена с тремя ответами. Прохождение хранит память браузера (ключ prodaj-mne-ruchku-igra).
 // Данные сцен собирает tools/sceny-v-igru.py, счёт и порядок считает schet.js.
-import { ETAPY } from './etapy.js?v=d2c9bc4e';
-import { MESTA, GEROY, GOROD } from './dannye/mesta.js?v=d2c9bc4e';
-import { SCENY, NACHALO } from './dannye/sceny.js?v=d2c9bc4e';
-import * as S from './schet.js?v=d2c9bc4e';
+import { ETAPY } from './etapy.js?v=32745c8b';
+import { MESTA, GEROY, GOROD } from './dannye/mesta.js?v=32745c8b';
+import { SCENY, NACHALO } from './dannye/sceny.js?v=32745c8b';
+import * as S from './schet.js?v=32745c8b';
 
-const KLYUCH = 'igra';
+// Ключ с приставкой проекта: хранилище общее у всех сайтов на xasi88.github.io. Старый ключ igra переносим один раз.
+const KLYUCH = 'prodaj-mne-ruchku-igra';
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
 function pamyat(v) {
   try {
-    if (v === undefined) return localStorage.getItem(KLYUCH);
-    localStorage.setItem(KLYUCH, v);
+    if (v !== undefined) { localStorage.setItem(KLYUCH, v); return null; }
+    let z = localStorage.getItem(KLYUCH);
+    if (z === null && localStorage.getItem('igra') !== null) {
+      z = localStorage.getItem('igra');
+      try { JSON.parse(z); localStorage.setItem(KLYUCH, z); } catch { z = null; }
+    }
+    return z;
   } catch { /* память закрыта: игра идёт до закрытия окна */ }
   return null;
 }

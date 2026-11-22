@@ -1,8 +1,8 @@
 // Приложение: экраны по адресу после #. Главная с картой, место, сцена, настройки, версии, разбор книг (автор).
-import { VERSIONS, VERSION } from './versions.js?v=d2c9bc4e';
-import * as db from './db.js?v=d2c9bc4e';
-import { knigiGlavnaya, knigiEtap, knigiItog, kniga, zanyatie } from './knigi.js?v=d2c9bc4e';
-import { karta, mesto, scena, sbrosKnopka, igraKlik, mirHtml } from './igra.js?v=d2c9bc4e';
+import { VERSIONS, VERSION } from './versions.js?v=32745c8b';
+import * as db from './db.js?v=32745c8b';
+import { knigiGlavnaya, knigiEtap, knigiItog, kniga, zanyatie } from './knigi.js?v=32745c8b';
+import { karta, mesto, scena, sbrosKnopka, igraKlik, mirHtml } from './igra.js?v=32745c8b';
 
 const app = document.getElementById('app');
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -13,10 +13,19 @@ let user = null;
 let knigiData = null; // null: не проверяли, false: нет доступа
 let soob = '';
 
+// Имя ключа с приставкой проекта: хранилище общее у всех сайтов на xasi88.github.io (урок 2026-11-22).
+// Старый ключ без приставки переносим один раз, только своё значение.
+const SVOI = { tema: TEMY.map((t) => t[0]), ekran: ['ves', 'okno'] };
 function hran(k, v) {
+  const kl = 'prodaj-mne-ruchku-' + k;
   try {
-    if (v === undefined) return localStorage.getItem(k);
-    localStorage.setItem(k, v);
+    if (v !== undefined) { localStorage.setItem(kl, v); return null; }
+    let z = localStorage.getItem(kl);
+    if (z === null) {
+      const star = localStorage.getItem(k);
+      if (star !== null && (SVOI[k] || []).includes(star)) { localStorage.setItem(kl, star); z = star; }
+    }
+    return z;
   } catch { /* хранилище закрыто: работаем без него */ }
   return null;
 }
@@ -109,7 +118,7 @@ async function mirOtkryt() {
   app.innerHTML = mirHtml();
   mirZakryt = () => {};
   try {
-    const { otkryt } = await import('./mir.js?v=d2c9bc4e');
+    const { otkryt } = await import('./mir.js?v=32745c8b');
     if (location.hash !== '#mir') return;
     const blok = app.querySelector('.mir');
     mirZakryt = otkryt(blok, (da) => {
