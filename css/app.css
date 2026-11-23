@@ -1,209 +1,138 @@
-/* Вид приложения. Значения только из tokens.css. Одна колонка под палец. */
+/* Вид по брендбуку: контур, плоский цвет, жёсткая тень. Цвета только из tokens.css. */
 * { box-sizing: border-box; }
-html { background: var(--fon); }
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: var(--fon-uzor), var(--fon);
-  color: var(--tekst);
-  font: 500 var(--razmer-tekst) / 1.6 var(--shrift);
-  -webkit-font-smoothing: antialiased;
-  -webkit-tap-highlight-color: transparent;
-}
-.wrap {
-  max-width: calc(var(--shirina) + 2 * var(--pole));
-  margin: 0 auto;
-  padding-block: calc(env(safe-area-inset-top, 0px) + var(--pole)) calc(env(safe-area-inset-bottom, 0px) + 48px);
-  padding-left: max(var(--pole), env(safe-area-inset-left, 0px));
-  padding-right: max(var(--pole), env(safe-area-inset-right, 0px));
-}
-@media (min-width: 768px) {
-  .wrap { padding-right: max(var(--plitka), env(safe-area-inset-right, 0px)); padding-left: max(var(--plitka), env(safe-area-inset-left, 0px)); max-width: calc(var(--shirina) + 2 * var(--plitka)); }
-}
-h1, h2 { font-family: var(--shrift-zag); font-weight: 400; line-height: 1.15; text-wrap: balance; margin: 0; }
-h1 { font-size: clamp(30px, 8vw, 44px); }
-h2 { font-size: clamp(24px, 6vw, 32px); }
-h3 { font: 800 19px/1.3 var(--shrift); margin: 0 0 12px; }
-p { margin: 0 0 12px; }
-p:last-child { margin-bottom: 0; }
-strong { font-weight: 800; }
-code { font: 600 0.9em/1 ui-monospace, Consolas, monospace; background: var(--glubina); padding: 2px 6px; border-radius: 6px; }
+html, body { margin: 0; height: 100%; background: var(--chernila); }
+body { font-family: var(--shrift); font-size: 18px; line-height: 1.45; color: var(--chernila); -webkit-tap-highlight-color: transparent; }
 button { font: inherit; color: inherit; cursor: pointer; }
-a { color: inherit; }
-:focus-visible { outline: 3px solid var(--akcent); outline-offset: 3px; }
+.skryto { position: absolute; width: 0; height: 0; }
 
-/* Шапка */
-.top { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
-.top img { flex: none; width: 64px; height: 64px; }
-.top .zag { flex: 1; min-width: 0; }
-.sub { color: var(--tekst-tiho); font-weight: 700; margin-top: 4px; }
-.vhod {
-  flex: none; min-height: var(--palec); min-width: var(--palec); padding: 0 16px;
-  background: transparent; border: 2px solid var(--liniya); border-radius: var(--knopka-ugly); font-weight: 700;
-}
-.vhod img { width: 32px; height: 32px; border-radius: 50%; display: block; }
-.vhod.est { padding: 4px; border-radius: 50%; }
+.ekran { container-type: inline-size; position: relative; min-height: 100dvh; max-width: var(--shirina); margin: 0 auto; overflow: hidden;
+  display: flex; flex-direction: column; padding: max(env(safe-area-inset-top), 10px) 16px max(env(safe-area-inset-bottom), 16px); }
+.prokrutka { overflow-y: auto; }
 
-/* Карточки-блоки */
-.blok { background: var(--sloy); border: 2px solid var(--kontur); border-radius: var(--knopka-ugly); padding: 18px 20px; margin-bottom: 24px; display: grid; gap: 10px; }
-.blok .row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-weight: 700; }
-.blok .big { font: 400 28px/1 var(--shrift-zag); color: var(--akcent); font-variant-numeric: tabular-nums; }
-.bar { height: 10px; background: var(--glubina); border-radius: 10px; overflow: hidden; }
-.bar i { display: block; height: 100%; background: var(--akcent); border-radius: 10px; }
-.razdel { font: 800 15px/1.3 var(--shrift); color: var(--tekst-tiho); margin: 28px 0 10px; }
+.fon-bumaga { background: var(--bumaga); }
+.fon-granat { background: var(--granat); }
+.fon-izumrud { background: var(--izumrud); }
+.fon-shafran { background: var(--shafran); }
+.fon-nebo { background: var(--nebo); }
+.fon-chernila { background: var(--chernila); color: var(--bumaga); }
 
-/* Путь по этапам и строки книг */
-.path, .books { display: grid; gap: 8px; }
-.step, .book {
-  display: flex; align-items: center; gap: 14px; min-height: var(--etap-h); width: 100%;
-  padding: 8px 16px 8px 10px; background: var(--sloy); border: 2px solid var(--kontur);
-  border-radius: var(--knopka-ugly); text-align: left; font-weight: 700; color: var(--tekst); text-decoration: none;
-}
-.book { min-height: 64px; line-height: 1.35; }
-.dot {
-  flex: none; width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--akcent);
-  display: grid; place-items: center; font: 400 16px/1 var(--shrift-zag); font-variant-numeric: tabular-nums;
-}
-.step .name, .book .t { flex: 1; min-width: 0; }
-.state { color: var(--tekst-tiho); font-size: 14px; white-space: nowrap; }
-.step.tek, .main-btn { background: var(--akcent); color: var(--na-akcente); }
-.step.tek .dot { background: var(--na-akcente); color: var(--akcent); border-color: var(--na-akcente); }
-.step.tek .state { color: var(--na-akcente); }
-.closed { opacity: var(--zakryto); cursor: default; }
+/* Верх: назад, глава, полоска пути */
+.verh { position: relative; z-index: 3; display: grid; grid-template-columns: 48px auto 1fr 48px; align-items: center; gap: 10px; min-height: 48px; }
+.verh-imya { font-family: var(--shrift-slova); font-size: 15px; text-transform: uppercase; background: var(--bumaga);
+  border: var(--kontur) solid var(--chernila); border-radius: 999px; padding: 4px 12px; }
+.polosa { height: 14px; border: var(--kontur) solid var(--chernila); border-radius: 999px; background: var(--bumaga); overflow: hidden; }
+.polosa i { display: block; height: 100%; background: var(--chernila); }
 
-.back {
-  display: inline-flex; align-items: center; gap: 8px; min-height: var(--palec); padding: 0 14px 0 10px;
-  border: 2px solid var(--liniya); border-radius: var(--knopka-ugly); font-weight: 700; text-decoration: none; margin-bottom: 20px;
-}
-.eyebrow { color: var(--akcent); font-weight: 800; margin-bottom: 6px; }
-.lead, .note { color: var(--tekst-tiho); margin-top: 10px; }
-.note { font-size: 15px; }
-.main-btn {
-  display: flex; align-items: center; justify-content: center; min-height: var(--knopka-h); width: 100%;
-  border: 2px solid var(--kontur); border-radius: var(--knopka-ugly); font-weight: 800; font-size: 18px;
-  text-decoration: none; margin: 24px 0;
+/* Огромные слова за героем */
+.slova { position: absolute; z-index: 0; left: 0; right: 0; top: 14%; text-align: center; font-family: var(--shrift-slova);
+  font-size: min(118px, calc(122cqw / var(--n, 5))); line-height: 0.9; text-transform: uppercase; filter: url(#boil); pointer-events: none; }
+.slova span { display: block; animation: vlet 0.42s steps(5) both; }
+.slova span:nth-child(2) { animation-delay: 0.12s; }
+.slova-svetlye { color: var(--belyj); -webkit-text-stroke: var(--kontur) var(--chernila); paint-order: stroke fill; }
+.slova-temnye { color: var(--granat); -webkit-text-stroke: var(--kontur) var(--chernila); paint-order: stroke fill; }
+@keyframes vlet {
+  0% { transform: translateX(-60%) scale(1.3); opacity: 0; }
+  60% { transform: translateX(6%) scale(1.04); opacity: 1; }
+  100% { transform: none; }
 }
 
-/* Карточка книги */
-.num { font: 400 56px/1 var(--shrift-zag); color: var(--akcent); margin-bottom: 10px; }
-.secs { display: grid; gap: 16px; margin-top: 24px; }
-.sec { background: var(--sloy); border: 2px solid var(--kontur); border-radius: var(--knopka-ugly); padding: 20px; min-width: 0; }
-.sec.take { background: var(--akcent); color: var(--na-akcente); }
-.sec.example { background: var(--glubina); }
-.sec.quiet, .sec.warn { background: transparent; border-color: var(--liniya); color: var(--tekst-tiho); }
-.sec.quiet h3, .sec.warn h3 { color: var(--tekst); }
-.list { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
-ul.list li { position: relative; padding-left: 22px; }
-ul.list li::before { content: ""; position: absolute; left: 4px; top: 0.7em; width: 8px; height: 8px; border-radius: 2px; background: var(--akcent); transform: rotate(45deg); }
-.sec.take ul.list li::before { background: var(--na-akcente); }
-ol.list li { display: grid; grid-template-columns: 32px 1fr; gap: 10px; }
-ol.list .n { width: 28px; height: 28px; border-radius: 50%; background: var(--glubina); color: var(--akcent); display: grid; place-items: center; font: 400 14px/1 var(--shrift-zag); margin-top: 1px; }
-.sec.take ol.list .n { background: var(--na-akcente); color: var(--akcent); }
+/* Линии скорости */
+.linii { position: absolute; inset: -20%; z-index: 0; transform: rotate(-18deg); opacity: 0.35;
+  background: repeating-linear-gradient(0deg, transparent 0 34px, var(--belyj) 34px 40px, transparent 40px 90px); animation: nesutsya 0.25s steps(2) infinite; }
+@keyframes nesutsya { to { transform: rotate(-18deg) translateX(-40px); } }
 
-/* Занятие с выбором ответа */
-.lesson .ask { font-weight: 800; color: var(--akcent); margin-top: 16px; }
-.opts { display: grid; gap: 8px; }
-.opt {
-  display: grid; grid-template-columns: 36px 1fr auto; gap: 12px; align-items: center; width: 100%;
-  min-height: 56px; padding: 10px 14px 10px 10px; text-align: left; background: var(--glubina);
-  border: 2px solid transparent; border-radius: var(--knopka-ugly); line-height: 1.45; transition: opacity var(--perehod);
+/* Герой */
+.figura { position: relative; z-index: 1; margin: auto auto 0; height: min(56dvh, 460px); display: flex; justify-content: center; }
+.geroj { height: 100%; width: auto; display: block; filter: url(#boil); user-select: none; -webkit-user-drag: none; }
+/* Рывок: тот же рисунок чуть присел и наклонился, как соседний кадр рисованного мультфильма */
+.geroj.ryvok { transform: translateY(1.2%) scaleY(0.985) rotate(-0.8deg); transform-origin: 50% 100%; }
+
+/* Низ кадра: облачко и кнопка поверх героя */
+.niz { position: relative; z-index: 2; display: grid; gap: 12px; margin-top: -8dvh; }
+.zastavka .niz { margin-top: 12px; }
+.niz-prostoj { display: grid; gap: 12px; margin-top: auto; padding-top: 16px; }
+
+.oblako { position: relative; background: var(--bumaga); border: var(--kontur) solid var(--chernila); border-radius: var(--radius);
+  box-shadow: var(--ten) var(--ten) 0 var(--chernila); padding: 12px 16px; }
+.oblako::before { content: ""; position: absolute; top: -16px; left: 38px; border: 8px solid transparent; border-bottom-color: var(--chernila); border-width: 0 10px 16px; }
+.oblako p { margin: 4px 0 0; font-weight: 600; }
+.oblako-imya { font-family: var(--shrift-slova); font-size: 14px; text-transform: uppercase; }
+.oblako-bolshoe p { font-size: 22px; }
+.tiho { opacity: 0.7; font-size: 15px; }
+
+/* Кнопки: высота от 56, контур, жёсткая тень, при нажатии садятся на тень */
+.kn, .kn-vid, .kn-rech { min-height: var(--knopka); border: var(--kontur) solid var(--chernila); border-radius: var(--radius);
+  box-shadow: var(--ten) var(--ten) 0 var(--chernila); transition: transform 0.05s, box-shadow 0.05s; }
+.kn:active, .kn-vid:active, .kn-rech:active { transform: translate(var(--ten), var(--ten)); box-shadow: 0 0 0 var(--chernila); }
+.kn { width: 100%; background: var(--granat); color: var(--belyj); font-family: var(--shrift-slova); font-size: 20px; text-transform: uppercase; }
+.kn-prozr { min-height: 48px; background: none; border: 0; font-weight: 700; text-decoration: underline; justify-self: center; padding: 0 16px; }
+.kn-malaya { width: 48px; height: 48px; border: var(--kontur) solid var(--chernila); border-radius: 50%; background: var(--bumaga); font-size: 22px; font-weight: 800; }
+[hidden] { display: none !important; }
+.kn-malaya { display: grid; place-items: center; padding: 0; }
+.kn-malaya svg { width: 24px; height: 24px; }
+.kn-malaya .dinamik { fill: var(--chernila); }
+.kn-malaya .volna { fill: none; stroke: var(--chernila); stroke-width: 2.4; stroke-linecap: round; }
+.kn-ustanovit:disabled { text-decoration: none; font-weight: 600; cursor: default; }
+:focus-visible { outline: 4px solid var(--chernila); outline-offset: 3px; }
+
+/* Четыре вопроса */
+.zagolovok { font-family: var(--shrift-slova); font-weight: 400; font-size: 32px; line-height: 1.05; text-transform: uppercase; margin: 14px 0 4px; }
+.vvod { margin: 0 0 14px; font-weight: 600; }
+.vidy { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.vid { position: relative; border: var(--kontur) solid var(--chernila); border-radius: var(--radius); box-shadow: var(--ten) var(--ten) 0 var(--chernila);
+  padding: 12px 14px 12px 64px; color: var(--belyj); }
+.vid.fon-shafran { color: var(--chernila); }
+.vid b { font-family: var(--shrift-slova); font-weight: 400; font-size: 20px; text-transform: uppercase; }
+.vid p { margin: 4px 0; }
+.vid q { display: block; font-style: italic; font-weight: 700; }
+.vid-n { position: absolute; left: 12px; top: 12px; width: 40px; height: 40px; border-radius: 50%; background: var(--bumaga); color: var(--chernila);
+  border: var(--kontur) solid var(--chernila); display: grid; place-items: center; font-family: var(--shrift-slova); font-size: 20px; }
+
+/* Тест */
+.varianty { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 22px; }
+.kn-vid { color: var(--belyj); font-weight: 800; font-size: 17px; padding: 8px; }
+.kn-vid.fon-shafran { color: var(--chernila); }
+.kn-vid:disabled { opacity: 0.45; }
+.kn-vid.vybran, .kn-vid.verno { opacity: 1; }
+.kn-vid.verno { outline: 4px solid var(--chernila); outline-offset: 3px; }
+.otzyv { margin-top: 18px; border: var(--kontur) solid var(--chernila); border-radius: var(--radius); padding: 12px 14px; font-weight: 600; }
+.otzyv-da { background: var(--izumrud); color: var(--belyj); }
+.otzyv-net { background: var(--granat); color: var(--belyj); }
+
+/* Разговор */
+.praktika { height: 100dvh; padding-bottom: max(env(safe-area-inset-bottom), 12px); }
+.scena { position: relative; margin: 8px -16px 0; height: 30dvh; min-height: 170px; border-bottom: var(--kontur) solid var(--chernila); display: flex; }
+.scena .figura { height: 92%; margin: auto auto 0; }
+.schet { position: absolute; top: 8px; left: 12px; display: grid; gap: 6px; }
+.chip { border: var(--kontur) solid var(--chernila); border-radius: 999px; padding: 2px 10px; font-weight: 800; font-size: 15px; color: var(--chernila); }
+.chip.fon-izumrud { color: var(--belyj); }
+.lenta { flex: 1; overflow-y: auto; padding: 12px 0; display: flex; flex-direction: column; gap: 10px; }
+.repl { max-width: 86%; border: var(--kontur) solid var(--chernila); border-radius: var(--radius); padding: 8px 12px; background: var(--belyj); font-weight: 600; }
+.repl b { display: block; font-family: var(--shrift-slova); font-weight: 400; font-size: 12px; text-transform: uppercase; opacity: 0.75; }
+.repl-ilyas { align-self: flex-end; background: var(--nebo); color: var(--belyj); }
+.repl-musa { align-self: center; max-width: 100%; background: var(--shafran); }
+.niz-prak { display: grid; gap: 10px; }
+.shag-imya { margin: 0; font-weight: 800; }
+.metka { display: inline-block; border: var(--kontur) solid var(--chernila); border-radius: 999px; padding: 0 10px; color: var(--belyj); font-size: 14px; }
+.metka.fon-shafran { color: var(--chernila); }
+.varianty-rech { display: grid; gap: 10px; }
+.kn-rech { background: var(--belyj); text-align: left; padding: 10px 14px; font-weight: 600; font-size: 16px; line-height: 1.35; }
+
+/* Итог */
+.itog-verh { position: relative; height: 44dvh; display: flex; }
+.itog-verh .figura { height: 90%; }
+.karta { position: relative; z-index: 2; background: var(--bumaga); border: var(--kontur) solid var(--chernila); border-radius: var(--radius);
+  box-shadow: var(--ten) var(--ten) 0 var(--chernila); padding: 14px 16px; margin-top: 12px; }
+.karta h2 { font-family: var(--shrift-slova); font-weight: 400; font-size: 18px; text-transform: uppercase; margin: 14px 0 2px; }
+.karta p { margin: 4px 0; }
+.itog-chisla { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.itog-chisla div { font-size: 14px; font-weight: 600; }
+.itog-chisla b { display: block; font-family: var(--shrift-slova); font-weight: 400; font-size: 24px; }
+
+@media (min-width: 700px) {
+  .ekran { border-left: var(--kontur) solid var(--chernila); border-right: var(--kontur) solid var(--chernila); }
 }
-.opt .letter { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--akcent); display: grid; place-items: center; font: 400 16px/1 var(--shrift-zag); }
-.opt .mark { font-weight: 800; font-size: 14px; white-space: nowrap; }
-.opt .mark:empty { display: none; }
-@media (max-width: 520px) {
-  .opt { grid-template-columns: 36px 1fr; }
-  .opt .mark { grid-column: 2; }
-}
-.opt[disabled] { cursor: default; }
-.opt.best { background: var(--akcent); color: var(--na-akcente); }
-.opt.best .letter { border-color: var(--na-akcente); }
-.opt.wrong { opacity: 0.6; }
-.opt.picked.wrong { opacity: 1; border-color: var(--tekst-tiho); }
-.why { margin-top: 14px; padding: 16px; border-radius: var(--knopka-ugly); background: var(--myagko); }
-.again, .vtor {
-  display: flex; width: fit-content; align-items: center; margin-top: 12px; min-height: var(--palec); padding: 0 16px; background: transparent;
-  border: 2px solid var(--akcent); border-radius: var(--knopka-ugly); font-weight: 700; text-decoration: none;
-}
-
-.pager { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 24px; }
-.pager a { display: grid; gap: 2px; min-height: var(--knopka-h); padding: 10px 16px; background: var(--sloy); border: 2px solid var(--kontur); border-radius: var(--knopka-ugly); text-decoration: none; min-width: 0; }
-.pager a.next { text-align: right; }
-.pager small { color: var(--tekst-tiho); font-weight: 700; }
-.pager span { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-/* Настройки и низ */
-.temy { display: grid; gap: 8px; }
-.tema { color: var(--tekst); background-image: var(--fon-uzor); display: flex; align-items: center; gap: 14px; min-height: var(--etap-h); padding: 8px 16px 8px 10px; background: var(--sloy); border: 2px solid var(--kontur); border-radius: var(--knopka-ugly); text-align: left; font-weight: 700; }
-.tema i { width: 40px; height: 40px; border-radius: 50%; flex: none; background: var(--akcent); border: 3px solid var(--sloy); outline: 2px solid var(--akcent); }
-.tema.vybor { outline: 3px solid var(--akcent); outline-offset: 2px; }
-.niz { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px; }
-.niz a, .niz button { min-height: var(--palec); padding: 0 16px; display: inline-flex; align-items: center; background: transparent; border: 2px solid var(--liniya); border-radius: var(--knopka-ugly); font-weight: 700; text-decoration: none; }
-.versii { display: grid; gap: 16px; }
-.versii li { list-style: none; }
-.versii ul { margin: 0; padding: 0; }
-.soob { padding: 16px; border-radius: var(--knopka-ugly); background: var(--myagko); margin: 16px 0; }
-
-.view { animation: in var(--perehod) ease-out; }
-@keyframes in { from { opacity: 0.4; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) {
-  .view { animation: none; }
-  .opt { transition: none; }
+  .slova span, .linii { animation: none; }
+  .slova, .geroj { filter: none; }
 }
-
-/* Игра: счёт, карта города, сцена */
-.schet { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 16px 0 8px; }
-.schet div { background: var(--sloy); border: 2px solid var(--kontur); border-radius: var(--knopka-ugly); padding: 12px 16px; min-width: 0; }
-.schet small { display: block; color: var(--tekst-tiho); font-weight: 700; font-size: 14px; }
-.schet b { font: 400 clamp(20px, 6vw, 28px)/1.2 var(--shrift-zag); color: var(--akcent); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.karta { position: relative; display: grid; gap: 14px; margin-top: 16px; padding: 4px 0; }
-.karta::before { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; border-left: 3px dashed var(--liniya); }
-.mesto {
-  position: relative; display: flex; align-items: center; gap: 12px; width: 88%; min-height: 72px;
-  padding: 10px 14px 10px 10px; background: var(--sloy); border: 2px solid var(--kontur);
-  border-radius: var(--knopka-ugly); color: var(--tekst); text-decoration: none; line-height: 1.3;
-}
-.mesto:nth-child(even) { margin-left: auto; }
-.mesto .name { flex: 1; min-width: 0; display: grid; gap: 2px; }
-.mesto .name b { font-weight: 800; }
-.mesto .name small { color: var(--tekst-tiho); font-size: 14px; font-weight: 700; }
-.mesto.tek { background: var(--akcent); color: var(--na-akcente); }
-.mesto.tek .dot { background: var(--na-akcente); color: var(--akcent); border-color: var(--na-akcente); }
-.mesto.tek .state, .mesto.tek .name small { color: var(--na-akcente); }
-.mesto.closed { background: var(--glubina); opacity: 1; }
-.mesto.closed > * { opacity: var(--zakryto); }
-.ruchka { margin-top: 32px; }
-.uchitel { margin-top: 20px; }
-.uchitel h3 { margin-bottom: 6px; }
-.pravilo { font-weight: 800; color: var(--akcent); }
-.book.nov .dot { background: var(--akcent); color: var(--na-akcente); }
-.klient { margin-top: 14px; padding: 14px 16px; background: var(--sloy); border: 2px solid var(--kontur); border-radius: 8px 30px 30px 30px; }
-.klient small { color: var(--tekst-tiho); font-weight: 700; font-size: 14px; }
-.klient p { font-weight: 700; }
-.lesson .ask { margin-bottom: 10px; }
-.itog { margin-top: 20px; }
-.itog h3 { margin-bottom: 6px; }
-.delty { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
-.delta { padding: 8px 14px; border: 2px solid var(--liniya); border-radius: var(--knopka-ugly); font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.delta.plus { background: var(--akcent); color: var(--na-akcente); border-color: var(--akcent); }
-.sec.example { margin-top: 16px; }
-.sec.example p { margin-bottom: 8px; }
-.why h3 { margin-bottom: 6px; }
-
-/* 3D-мир: сцена на весь экран, поверх неё кнопка назад, подсказка и разговор с учителем */
-.mir { position: fixed; inset: 0; z-index: 10; background: var(--mir-nebo); }
-.mir canvas { display: block; width: 100%; height: 100%; touch-action: none; }
-.mir-nazad {
-  position: absolute; top: 12px; left: 12px; display: flex; align-items: center;
-  min-height: var(--palec); padding: 0 18px; border-radius: var(--knopka-ugly);
-  background: var(--glubina); color: var(--tekst); font-weight: 700; text-decoration: none;
-}
-.mir-podskazka, .mir-panel {
-  position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%);
-  width: min(94vw, 520px); background: var(--glubina); color: var(--tekst);
-}
-.mir-podskazka { padding: 12px 18px; border-radius: 16px; text-align: center; pointer-events: none; opacity: 0.92; }
-.mir-panel { padding: 20px; border-radius: 24px 8px 24px 8px; }
-.mir-panel h3 { margin: 0 0 8px; }
-.mir-panel p { margin: 0 0 16px; }
-.mir-panel[hidden], .mir-podskazka[hidden] { display: none; }

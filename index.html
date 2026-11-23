@@ -1,23 +1,31 @@
 <!doctype html>
-<html lang="ru" data-tema="rynok">
+<html lang="ru">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#0f6b4f">
+<meta name="theme-color" content="#16130f">
 <meta name="description" content="Курс продаж в форме игры. Продажи без уговоров.">
 <title>Продай мне ручку</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="img/favicon-64.png" type="image/png">
 <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preload" href="fonts/russo-one-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/manrope-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/tokens.css?v=32745c8b">
-<link rel="stylesheet" href="css/fonts.css?v=32745c8b">
-<link rel="stylesheet" href="css/app.css?v=32745c8b">
+<link rel="stylesheet" href="css/tokens.css?v=19902189">
+<link rel="stylesheet" href="css/fonts.css?v=19902189">
+<link rel="stylesheet" href="css/app.css?v=19902189">
 </head>
 <body>
-<main class="wrap" id="app"></main>
-<noscript><p class="wrap">Для курса нужен включённый JavaScript.</p></noscript>
-<script type="module" src="js/app.js?v=32745c8b"></script>
+<!-- Дрожь контура: шум меняется 8 раз в секунду (js/app.js), рисунок выглядит нарисованным от руки -->
+<svg class="skryto" aria-hidden="true" focusable="false">
+  <filter id="boil" x="-5%" y="-5%" width="110%" height="110%">
+    <feTurbulence id="boil-shum" type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="1"/>
+    <feDisplacementMap in="SourceGraphic" scale="3.5"/>
+  </filter>
+</svg>
+<main id="app"></main>
+<noscript><p>Для курса нужен включённый JavaScript.</p></noscript>
+<script type="module" src="js/app.js?v=19902189"></script>
 </body>
 </html>

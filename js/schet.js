@@ -1,81 +1,62 @@
-// Счёт и порядок игры. Чистые функции без экрана: их проверяют тесты (tests/run.mjs).
-// Прохождение: { '56': { vybor: 'Б', poryadok: 'ВАБ' } }: буква выбранного ответа и порядок ответов на экране.
-export const BUKVY = ['А', 'Б', 'В'];
-export const TIPY = {
-  chestno: 'Честный ответ',
-  ulovka: 'Уловка',
-  strah: 'Страх или уступка',
-  spor: 'Спор или нажим',
-  pusto: 'Пустые слова',
-};
+// Счёт и память главы: чистые функции, их проверяют тесты (tests/run.mjs).
+// Считается только первый ответ на каждый вопрос и шаг: переиграть можно, очки не копятся.
 
-export const otvet = (scena, bukva) => scena.otvety.find((o) => o.b === bukva) || null;
+export const KLYUCH = 'prodaj-mne-ruchku-glava-1';
 
-// Счёт: начало плюс последний выбор в каждой сцене. Переиграли сцену: старый выбор заменён, очки не копятся.
-export function schet(nachalo, sceny, hod) {
+export function pustoe() {
+  return { kadr: 0, test: {}, praktika: {} };
+}
+
+export function prochitat(tekst, glava) {
+  const p = pustoe();
+  let d;
+  try { d = JSON.parse(tekst); } catch { return p; }
+  if (!d || typeof d !== 'object') return p;
+  const n = glava.kadry.length;
+  if (Number.isInteger(d.kadr) && d.kadr >= 0 && d.kadr < n) p.kadr = d.kadr;
+  for (const [pole, celoe] of [['test', 'vid'], ['praktika', 'nomer']]) {
+    if (d[pole] && typeof d[pole] === 'object') {
+      for (const [k, v] of Object.entries(d[pole])) {
+        if (/^\d{1,2}$/.test(k) && (celoe === 'vid' ? typeof v === 'string' : Number.isInteger(v) && v >= 0 && v < 3)) p[pole][k] = v;
+      }
+    }
+  }
+  return p;
+}
+
+// Записать первый ответ. Повторный ответ на тот же вопрос не меняет запись.
+export function pervyj(zapis, nomer, otvet) {
+  if (zapis[nomer] !== undefined) return zapis;
+  return { ...zapis, [nomer]: otvet };
+}
+
+export function itogTesta(voprosy, otvety) {
+  return voprosy.filter((q, i) => otvety[i] === q.vid).length;
+}
+
+export function itogPraktiki(nachalo, praktika, pervye) {
   let vyruchka = nachalo.vyruchka;
   let doverie = nachalo.doverie;
-  for (const s of sceny) {
-    const o = otvet(s, hod?.[s.id]?.vybor);
-    if (o) { vyruchka += o.v; doverie += o.d; }
-  }
-  return { vyruchka: Math.max(0, vyruchka), doverie: Math.max(0, doverie) };
+  let verno = 0;
+  praktika.shagi.forEach((sh, i) => {
+    const o = sh.otvety[pervye[i]];
+    if (!o) return;
+    vyruchka += o.v;
+    doverie += o.d;
+    if (o.tip === 'verno') verno++;
+  });
+  return { vyruchka: Math.max(0, vyruchka), doverie, verno };
 }
 
-// Порядок трёх ответов на экране: случайный, чтобы лучший не стоял на одном месте.
-export function peremeshat(rnd = Math.random) {
-  const a = [...BUKVY];
+// Порядок ответов на экране: случайный, но один и тот же для шага, пока человек на нём
+export function peremeshat(n, sluchaj = Math.random) {
+  const a = [...Array(n).keys()];
   for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(rnd() * (i + 1));
+    const j = Math.floor(sluchaj() * (i + 1));
     [a[i], a[j]] = [a[j], a[i]];
   }
-  return a.join('');
+  return a;
 }
 
-const porOk = (p) => typeof p === 'string' && p.length === 3 && BUKVY.every((b) => p.includes(b));
-
-// Выбор ответа: новое прохождение, старое не меняется.
-export function vybrat(hod, scena, bukva, poryadok) {
-  if (!otvet(scena, bukva) || !porOk(poryadok)) return hod;
-  return { ...hod, [scena.id]: { vybor: bukva, poryadok } };
-}
-
-export function zabyt(hod, id) {
-  const n = { ...hod };
-  delete n[id];
-  return n;
-}
-
-// Буква на экране (А, Б, В по месту кнопки) для ответа из карточки.
-export const naEkrane = (poryadok, bukva) => BUKVY[poryadok.indexOf(bukva)] || bukva;
-
-// «Почему» из карточки называет ответы буквами карточки. На экране порядок другой: меняем буквы.
-export function pochemu(tekst, poryadok) {
-  return tekst.replace(/([Оо]твет[а-яё]*) ([АБВ])(?![а-яёА-ЯЁ])/g, (_, slovo, b) => `${slovo} ${naEkrane(poryadok, b)}`);
-}
-
-export const scenyEtapa = (sceny, etap) => sceny.filter((s) => s.etap === etap);
-export const proydeno = (sceny, hod) => sceny.filter((s) => otvet(s, hod?.[s.id]?.vybor)).length;
-
-// Следующая сцена того же места или null, если эта последняя.
-export function sleduyushchaya(sceny, id) {
-  const s = sceny.find((x) => x.id === id);
-  if (!s) return null;
-  const ryad = scenyEtapa(sceny, s.etap);
-  return ryad[ryad.indexOf(s) + 1] || null;
-}
-
-// Память браузера может вернуть что угодно: оставляем только годные записи.
-export function prochitat(stroka, sceny) {
-  let d;
-  try { d = JSON.parse(stroka || '{}'); } catch { return {}; }
-  const out = {};
-  for (const s of sceny) {
-    const z = d?.[s.id];
-    if (z && otvet(s, z.vybor) && porOk(z.poryadok)) out[s.id] = { vybor: z.vybor, poryadok: z.poryadok };
-  }
-  return out;
-}
-
-export const rubli = (n) => `${n < 0 ? '−' : ''}${String(Math.abs(n)).replace(/\B(?=(\d{3})+$)/g, ' ')} ₽`;
-export const soZnakom = (n) => (n > 0 ? '+' : n < 0 ? '−' : '') + Math.abs(n);
+export const rubli = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' ₽';
+export const soZnakom = (n) => (n > 0 ? '+' + n : n < 0 ? '−' + Math.abs(n) : '0');

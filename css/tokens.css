@@ -1,89 +1,25 @@
-/* Цвета, шрифты и размеры: только здесь. Брендбук: docs/Брендбук Продай мне ручку.md */
-:root,
-[data-tema="rynok"] {
-  --fon: #0f6b4f;
-  --sloy: #0a5540;
-  --glubina: #0a3d2e;
-  --akcent: #ffb627;
-  --na-akcente: #0a3d2e;
-  --tekst: #ffffff;
-  --tekst-tiho: rgba(255, 255, 255, 0.76);
-  --liniya: rgba(255, 255, 255, 0.16);
-  --myagko: rgba(255, 182, 39, 0.14);
-  --kontur: transparent;
-  --fon-uzor: none;
-  color-scheme: dark;
-}
-
-[data-tema="chernila"] {
-  --fon: #1736c9;
-  --sloy: #0e2391;
-  --glubina: #0a1a6e;
-  --akcent: #ffd400;
-  --na-akcente: #0e2391;
-  --tekst: #ffffff;
-  --tekst-tiho: rgba(255, 255, 255, 0.78);
-  --liniya: rgba(255, 255, 255, 0.2);
-  --myagko: rgba(255, 212, 0, 0.14);
-  --kontur: transparent;
-  --fon-uzor: none;
-  color-scheme: dark;
-}
-
-[data-tema="ring"] {
-  --fon: #ff4a1c;
-  --sloy: #ffe14d;
-  --glubina: #fff4b8;
-  --akcent: #111111;
-  --na-akcente: #ffe14d;
-  --tekst: #111111;
-  --tekst-tiho: rgba(17, 17, 17, 0.74);
-  --liniya: rgba(17, 17, 17, 0.28);
-  --myagko: rgba(17, 17, 17, 0.08);
-  --kontur: #111111;
-  --fon-uzor: radial-gradient(#00000022 1.5px, transparent 1.6px) 0 0 / 16px 16px;
-  color-scheme: light;
-}
-
-/* Цвета 3D-мира: одни для всех тем, их читает js/mir.js */
+/* Цвета, шрифты и размеры: только здесь (кодекс). Значения из docs/Брендбук.md. */
 :root {
-  --mir-nebo: #cfe6dc;
-  --mir-zemlya: #dcc9a0;
-  --mir-doroga: #c9b388;
-  --mir-stena: #f1e6cf;
-  --mir-krysha: #b5533c;
-  --mir-listva: #2f7d55;
-  --mir-stvol: #7a5a3c;
-  --mir-doska: #9b7448;
-  --mir-naves-1: #ffb627;
-  --mir-naves-2: #0f6b4f;
-  --mir-naves-3: #c8452f;
-  --mir-tovar-1: #e2572b;
-  --mir-tovar-2: #f2c230;
-  --mir-tovar-3: #6aa84f;
-  --mir-kozha: #d9a57c;
-  --mir-geroy: #1f4e8c;
-  --mir-shtany: #2a2a2e;
-  --mir-storozh: #2e5a3a;
-  --mir-papaha: #55524e;
-  --mir-boroda: #e2e2dc;
-  --mir-metka: #ffb627;
-  --mir-vyveska: #0a3d2e;
-  --mir-vyveska-tekst: #ffffff;
-}
+  --chernila: #16130f;
+  --bumaga: #f3ead8;
+  --granat: #c8323a;
+  --granat-ten: #a02830;
+  --izumrud: #12795a;
+  --izumrud-ten: #0e6148;
+  --shafran: #f2b230;
+  --shafran-ten: #c28e26;
+  --nebo: #3f86c6;
+  --nebo-ten: #326b9e;
+  --belyj: #ffffff;
 
-:root {
-  --shrift-zag: "Russo One", "Arial Black", system-ui, sans-serif;
-  --shrift: "Manrope", "Segoe UI", system-ui, sans-serif;
-  --razmer-tekst: 17px;
-  --shag: 4px;
-  --pole: 24px;
-  --knopka-h: 60px;
-  --knopka-ugly: 30px 8px 30px 8px;
-  --palec: 44px;
-  --etap-h: 56px;
-  --zakryto: 0.55;
-  --perehod: 250ms;
-  --shirina: 720px;
-  --plitka: 96px;
+
+  --shrift-slova: "Russo One", "Arial Black", sans-serif;
+  --shrift: "Manrope", system-ui, sans-serif;
+
+  --kontur: 3px;
+  --ten: 5px;
+  --knopka: 56px;
+  --radius: 14px;
+  --shag: 8px;
+  --shirina: 560px;
 }
