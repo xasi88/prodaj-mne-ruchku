@@ -12,14 +12,18 @@
   --nebo-ten: #326b9e;
   --belyj: #ffffff;
 
-
   --shrift-slova: "Russo One", "Arial Black", sans-serif;
   --shrift: "Manrope", system-ui, sans-serif;
 
+  /* Размеры растут с высотой экрана: всё помещается без прокрутки (кодекс) */
+  --t: clamp(14px, 2.05dvh, 18px);
+  --t-mal: clamp(12px, 1.7dvh, 15px);
+  --t-otvet: clamp(13px, 1.85dvh, 16px);
   --kontur: 3px;
-  --ten: 5px;
-  --knopka: 56px;
+  --ten: 4px;
+  --knopka: clamp(46px, 6.6dvh, 56px);
+  --knopka-mal: 44px;
   --radius: 14px;
-  --shag: 8px;
+  --shag: clamp(6px, 1dvh, 10px);
   --shirina: 560px;
 }

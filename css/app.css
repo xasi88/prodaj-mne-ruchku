@@ -1,31 +1,34 @@
-/* Вид по брендбуку: контур, плоский цвет, жёсткая тень. Цвета только из tokens.css. */
+/* Вид по брендбуку: контур, плоский цвет, жёсткая тень. Цвета и размеры только из tokens.css.
+   Каждый экран ровно в высоту окна, без прокрутки (кодекс): лишнее место забирает герой, текст сжимается по высоте. */
 * { box-sizing: border-box; }
-html, body { margin: 0; height: 100%; background: var(--chernila); }
-body { font-family: var(--shrift); font-size: 18px; line-height: 1.45; color: var(--chernila); -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: var(--chernila); overscroll-behavior: none; }
+body { font-family: var(--shrift); font-size: var(--t); line-height: 1.35; color: var(--chernila); -webkit-tap-highlight-color: transparent; }
 button { font: inherit; color: inherit; cursor: pointer; }
 .skryto { position: absolute; width: 0; height: 0; }
+[hidden] { display: none !important; }
+:focus-visible { outline: 4px solid var(--chernila); outline-offset: 3px; }
 
-.ekran { container-type: inline-size; position: relative; min-height: 100dvh; max-width: var(--shirina); margin: 0 auto; overflow: hidden;
-  display: flex; flex-direction: column; padding: max(env(safe-area-inset-top), 10px) 16px max(env(safe-area-inset-bottom), 16px); }
-.prokrutka { overflow-y: auto; }
+.ekran { container-type: inline-size; position: relative; height: 100dvh; max-width: var(--shirina); margin: 0 auto; overflow: hidden;
+  display: flex; flex-direction: column; padding: max(env(safe-area-inset-top), 8px) 14px max(env(safe-area-inset-bottom), 12px); }
 
 .fon-bumaga { background: var(--bumaga); }
 .fon-granat { background: var(--granat); }
 .fon-izumrud { background: var(--izumrud); }
 .fon-shafran { background: var(--shafran); }
 .fon-nebo { background: var(--nebo); }
+.fon-belyj { background: var(--belyj); }
 .fon-chernila { background: var(--chernila); color: var(--bumaga); }
 
-/* Верх: назад, глава, полоска пути */
-.verh { position: relative; z-index: 3; display: grid; grid-template-columns: 48px auto 1fr 48px; align-items: center; gap: 10px; min-height: 48px; }
-.verh-imya { font-family: var(--shrift-slova); font-size: 15px; text-transform: uppercase; background: var(--bumaga);
-  border: var(--kontur) solid var(--chernila); border-radius: 999px; padding: 4px 12px; }
+/* Верх: назад, глава (ведёт к списку глав), полоска пути, звук */
+.verh { position: relative; z-index: 3; flex: none; display: grid; grid-template-columns: 44px auto 1fr 44px; align-items: center; gap: 8px; min-height: 44px; }
+.verh-imya { font-family: var(--shrift-slova); font-size: 14px; text-transform: uppercase; background: var(--bumaga); color: var(--chernila);
+  border: var(--kontur) solid var(--chernila); border-radius: 999px; padding: 0 12px; min-height: 44px; }
 .polosa { height: 14px; border: var(--kontur) solid var(--chernila); border-radius: 999px; background: var(--bumaga); overflow: hidden; }
 .polosa i { display: block; height: 100%; background: var(--chernila); }
 
 /* Огромные слова за героем */
-.slova { position: absolute; z-index: 0; left: 0; right: 0; top: 14%; text-align: center; font-family: var(--shrift-slova);
-  font-size: min(118px, calc(122cqw / var(--n, 5))); line-height: 0.9; text-transform: uppercase; filter: url(#boil); pointer-events: none; }
+.slova { position: absolute; z-index: 0; left: 0; right: 0; top: 12%; text-align: center; font-family: var(--shrift-slova);
+  font-size: min(118px, calc(122cqw / var(--n, 5)), 11dvh); line-height: 0.9; text-transform: uppercase; filter: url(#boil); pointer-events: none; }
 .slova span { display: block; animation: vlet 0.42s steps(5) both; }
 .slova span:nth-child(2) { animation-delay: 0.12s; }
 .slova-svetlye { color: var(--belyj); -webkit-text-stroke: var(--kontur) var(--chernila); paint-order: stroke fill; }
@@ -41,98 +44,178 @@ button { font: inherit; color: inherit; cursor: pointer; }
   background: repeating-linear-gradient(0deg, transparent 0 34px, var(--belyj) 34px 40px, transparent 40px 90px); animation: nesutsya 0.25s steps(2) infinite; }
 @keyframes nesutsya { to { transform: rotate(-18deg) translateX(-40px); } }
 
-/* Герой */
-.figura { position: relative; z-index: 1; margin: auto auto 0; height: min(56dvh, 460px); display: flex; justify-content: center; }
-.geroj { height: 100%; width: auto; display: block; filter: url(#boil); user-select: none; -webkit-user-drag: none; }
+/* Герой: занимает всё свободное место по высоте */
+.figura { position: relative; z-index: 1; flex: 1 1 0; min-height: 0; display: flex; justify-content: center; align-items: flex-end; }
+.geroj { height: 100%; max-height: 520px; width: auto; max-width: 100%; object-fit: contain; object-position: bottom; display: block;
+  filter: url(#boil); user-select: none; -webkit-user-drag: none; }
 /* Рывок: тот же рисунок чуть присел и наклонился, как соседний кадр рисованного мультфильма */
 .geroj.ryvok { transform: translateY(1.2%) scaleY(0.985) rotate(-0.8deg); transform-origin: 50% 100%; }
 
-/* Низ кадра: облачко и кнопка поверх героя */
-.niz { position: relative; z-index: 2; display: grid; gap: 12px; margin-top: -8dvh; }
-.zastavka .niz { margin-top: 12px; }
-.niz-prostoj { display: grid; gap: 12px; margin-top: auto; padding-top: 16px; }
+/* Низ кадра: облачко и кнопка поверх ног героя */
+.niz { position: relative; z-index: 2; flex: none; display: grid; gap: var(--shag); margin-top: -6dvh; }
+.zastavka .niz { margin-top: var(--shag); }
+.zastavka .slova { top: 16%; }
 
 .oblako { position: relative; background: var(--bumaga); border: var(--kontur) solid var(--chernila); border-radius: var(--radius);
-  box-shadow: var(--ten) var(--ten) 0 var(--chernila); padding: 12px 16px; }
-.oblako::before { content: ""; position: absolute; top: -16px; left: 38px; border: 8px solid transparent; border-bottom-color: var(--chernila); border-width: 0 10px 16px; }
-.oblako p { margin: 4px 0 0; font-weight: 600; }
-.oblako-imya { font-family: var(--shrift-slova); font-size: 14px; text-transform: uppercase; }
-.oblako-bolshoe p { font-size: 22px; }
-.tiho { opacity: 0.7; font-size: 15px; }
+  box-shadow: var(--ten) var(--ten) 0 var(--chernila); padding: 8px 14px; }
+.panel .oblako::before { content: ""; position: absolute; top: -16px; left: 38px; border: solid transparent; border-bottom-color: var(--chernila); border-width: 0 10px 16px; }
+.oblako p { margin: 2px 0 0; font-weight: 600; }
+.oblako-imya { font-family: var(--shrift-slova); font-weight: 400; font-size: var(--t-mal); text-transform: uppercase; }
+.tiho { opacity: 0.7; font-size: var(--t-mal); }
 
-/* Кнопки: высота от 56, контур, жёсткая тень, при нажатии садятся на тень */
-.kn, .kn-vid, .kn-rech { min-height: var(--knopka); border: var(--kontur) solid var(--chernila); border-radius: var(--radius);
+/* Кнопки: контур, жёсткая тень, при нажатии садятся на тень */
+.kn, .kn-otvet, .kn-korzina, .kn-vybor, .kartochka, .plitka, .kusok { border: var(--kontur) solid var(--chernila); border-radius: var(--radius);
   box-shadow: var(--ten) var(--ten) 0 var(--chernila); transition: transform 0.05s, box-shadow 0.05s; }
-.kn:active, .kn-vid:active, .kn-rech:active { transform: translate(var(--ten), var(--ten)); box-shadow: 0 0 0 var(--chernila); }
-.kn { width: 100%; background: var(--granat); color: var(--belyj); font-family: var(--shrift-slova); font-size: 20px; text-transform: uppercase; }
-.kn-prozr { min-height: 48px; background: none; border: 0; font-weight: 700; text-decoration: underline; justify-self: center; padding: 0 16px; }
-.kn-malaya { width: 48px; height: 48px; border: var(--kontur) solid var(--chernila); border-radius: 50%; background: var(--bumaga); font-size: 22px; font-weight: 800; }
-[hidden] { display: none !important; }
-.kn-malaya { display: grid; place-items: center; padding: 0; }
+.kn:active, .kn-otvet:active, .kn-korzina:active, .kn-vybor:active, .kartochka:active, .plitka:active, .kusok:active {
+  transform: translate(var(--ten), var(--ten)); box-shadow: 0 0 0 var(--chernila); }
+.kn { width: 100%; min-height: var(--knopka); background: var(--granat); color: var(--belyj); font-family: var(--shrift-slova); font-size: clamp(16px, 2.4dvh, 20px); text-transform: uppercase; padding: 4px 12px; }
+.kn:disabled { opacity: 0.5; box-shadow: none; }
+.kn-prozr { min-height: var(--knopka-mal); background: none; border: 0; font-weight: 700; text-decoration: underline; justify-self: center; padding: 0 14px; }
+.kn-malaya { width: 44px; height: 44px; border: var(--kontur) solid var(--chernila); border-radius: 50%; background: var(--bumaga); color: var(--chernila);
+  font-size: 22px; font-weight: 800; display: grid; place-items: center; padding: 0; }
 .kn-malaya svg { width: 24px; height: 24px; }
 .kn-malaya .dinamik { fill: var(--chernila); }
 .kn-malaya .volna { fill: none; stroke: var(--chernila); stroke-width: 2.4; stroke-linecap: round; }
 .kn-ustanovit:disabled { text-decoration: none; font-weight: 600; cursor: default; }
-:focus-visible { outline: 4px solid var(--chernila); outline-offset: 3px; }
 
-/* Четыре вопроса */
-.zagolovok { font-family: var(--shrift-slova); font-weight: 400; font-size: 32px; line-height: 1.05; text-transform: uppercase; margin: 14px 0 4px; }
-.vvod { margin: 0 0 14px; font-weight: 600; }
-.vidy { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
-.vid { position: relative; border: var(--kontur) solid var(--chernila); border-radius: var(--radius); box-shadow: var(--ten) var(--ten) 0 var(--chernila);
-  padding: 12px 14px 12px 64px; color: var(--belyj); }
-.vid.fon-shafran { color: var(--chernila); }
-.vid b { font-family: var(--shrift-slova); font-weight: 400; font-size: 20px; text-transform: uppercase; }
-.vid p { margin: 4px 0; }
-.vid q { display: block; font-style: italic; font-weight: 700; }
-.vid-n { position: absolute; left: 12px; top: 12px; width: 40px; height: 40px; border-radius: 50%; background: var(--bumaga); color: var(--chernila);
-  border: var(--kontur) solid var(--chernila); display: grid; place-items: center; font-family: var(--shrift-slova); font-size: 20px; }
+/* ---- Карта глав ---- */
+.karta-verh { flex: none; display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 4px 0 var(--shag); }
+.karta-verh h1 { margin: 0; font-family: var(--shrift-slova); font-weight: 400; font-size: clamp(22px, 3.6dvh, 30px); line-height: 1; text-transform: uppercase; color: var(--shafran); }
+.karta-verh p { margin: 2px 0 0; font-size: var(--t-mal); opacity: 0.8; }
+.plitki { flex: 1 1 0; min-height: 0; list-style: none; margin: 0; padding: 0 var(--ten) var(--ten) 0; display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 1fr; gap: var(--shag); }
+.plitka { position: relative; width: 100%; height: 100%; min-height: 44px; text-align: left; padding: 6px 10px; display: flex; flex-direction: column; justify-content: flex-end;
+  color: var(--belyj); border-color: var(--bumaga); box-shadow: var(--ten) var(--ten) 0 var(--bumaga); }
+.plitka.fon-shafran { color: var(--chernila); }
+.plitka b { font-family: var(--shrift-slova); font-weight: 400; font-size: clamp(13px, 1.9dvh, 17px); line-height: 1.05; text-transform: uppercase; }
+.plitka-n { position: absolute; top: 2px; left: 8px; font-family: var(--shrift-slova); font-size: clamp(20px, 3.4dvh, 30px); line-height: 1; }
+.plitka-mesto { font-size: var(--t-mal); font-weight: 700; opacity: 0.85; }
+.plitka-gotovo { position: absolute; top: 6px; right: 8px; font-size: var(--t-mal); font-weight: 800; background: var(--bumaga); color: var(--chernila);
+  border: 2px solid var(--chernila); border-radius: 999px; padding: 0 6px; }
+.karta-niz { flex: none; display: flex; flex-wrap: wrap; justify-content: center; padding-top: 4px; }
+.karta-niz .kn-prozr { color: var(--bumaga); }
 
-/* Тест */
-.varianty { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 22px; }
-.kn-vid { color: var(--belyj); font-weight: 800; font-size: 17px; padding: 8px; }
-.kn-vid.fon-shafran { color: var(--chernila); }
-.kn-vid:disabled { opacity: 0.45; }
-.kn-vid.vybran, .kn-vid.verno { opacity: 1; }
-.kn-vid.verno { outline: 4px solid var(--chernila); outline-offset: 3px; }
-.otzyv { margin-top: 18px; border: var(--kontur) solid var(--chernila); border-radius: var(--radius); padding: 12px 14px; font-weight: 600; }
+/* ---- Задание: заголовок, стимул, ответы, отзыв, кнопка внизу ---- */
+.zadanie { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; gap: var(--shag); padding: var(--shag) var(--ten) var(--ten) 0; }
+.zagolovok { font-family: var(--shrift-slova); font-weight: 400; font-size: clamp(22px, 3.4dvh, 30px); line-height: 1.05; text-transform: uppercase; margin: 2px 0 0; }
+.vvod { margin: 0; font-weight: 600; }
+.metka-zad { margin: 0; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.metka-zad b { font-family: var(--shrift-slova); font-weight: 400; font-size: clamp(15px, 2.3dvh, 20px); text-transform: uppercase; line-height: 1.1; }
+.metka-zad span { flex: none; font-weight: 800; font-size: var(--t-mal); border: 2px solid var(--chernila); border-radius: 999px; padding: 0 8px; background: var(--belyj); }
+.oblako-stim p { font-size: clamp(15px, 2.3dvh, 20px); }
+.niz-zad { margin-top: auto; display: grid; gap: 4px; }
+/* Муса в свободном месте задания: прячется, если места меньше 110 точек */
+.zapas { flex: 1 1 0; min-height: 0; container-type: size; display: flex; justify-content: flex-end; margin: 0 -14px calc(-1 * var(--shag)) 0; }
+.zapas .figura { flex: none; height: 100%; }
+@container (max-height: 110px) { .zapas .figura { display: none; } }
+.ryad { display: flex; justify-content: center; flex-wrap: wrap; }
+
+.abvg { display: grid; gap: var(--shag); }
+.kn-otvet { display: flex; align-items: center; gap: 10px; width: 100%; min-height: var(--knopka-mal); background: var(--belyj); text-align: left;
+  padding: 6px 10px 6px 6px; font-weight: 600; font-size: var(--t-otvet); line-height: 1.3; }
+.bukva { flex: none; width: 34px; height: 34px; border-radius: 50%; background: var(--chernila); color: var(--bumaga); display: grid; place-items: center;
+  font-family: var(--shrift-slova); font-size: 17px; }
+.otvet-t { flex: 1; }
+.strochka { display: block; }
+.strochka + .strochka { margin-top: 2px; }
+.abvg-dubli .kn-otvet { align-items: flex-start; font-size: var(--t-mal); }
+.abvg-lestnica .kn-otvet:nth-child(2) { margin-left: 4%; }
+.abvg-lestnica .kn-otvet:nth-child(3) { margin-left: 8%; }
+.abvg-lestnica .kn-otvet:nth-child(4) { margin-left: 12%; }
+.abvg-lestnica .kn-otvet { width: auto; }
+.kn-otvet:disabled, .kusok:disabled, .kn-korzina:disabled, .kn-vybor:disabled, .kartochka:disabled { cursor: default; box-shadow: none; transform: none; }
+.kn-otvet:disabled { opacity: 0.55; }
+.kn-otvet.verno, .kusok.verno, .kn-korzina.verno, .kn-vybor.verno { opacity: 1; background: var(--izumrud); color: var(--belyj); }
+.kn-otvet.neverno, .kusok.neverno, .kn-korzina.neverno, .kn-vybor.neverno { opacity: 1; background: var(--granat); color: var(--belyj); }
+.verno .bukva, .neverno .bukva { background: var(--bumaga); color: var(--chernila); }
+
+.otzyv { border: var(--kontur) solid var(--chernila); border-radius: var(--radius); padding: 6px 12px; font-weight: 600; font-size: var(--t-otvet); }
 .otzyv-da { background: var(--izumrud); color: var(--belyj); }
 .otzyv-net { background: var(--granat); color: var(--belyj); }
+.oblako-musa { background: var(--nebo); color: var(--belyj); }
+.oblako-vash { background: var(--belyj); }
+.oblako-szhato p, .oblako-vash p, .oblako-musa p { font-size: var(--t-otvet); line-height: 1.3; }
+.oblako-vash .pusto { opacity: 0.5; }
+.oblako-final { background: var(--izumrud); color: var(--belyj); }
 
-/* Разговор */
-.praktika { height: 100dvh; padding-bottom: max(env(safe-area-inset-bottom), 12px); }
-.scena { position: relative; margin: 8px -16px 0; height: 30dvh; min-height: 170px; border-bottom: var(--kontur) solid var(--chernila); display: flex; }
-.scena .figura { height: 92%; margin: auto auto 0; }
-.schet { position: absolute; top: 8px; left: 12px; display: grid; gap: 6px; }
-.chip { border: var(--kontur) solid var(--chernila); border-radius: 999px; padding: 2px 10px; font-weight: 800; font-size: 15px; color: var(--chernila); }
+/* Список правил */
+.punkty { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--shag); }
+.punkt { position: relative; border: var(--kontur) solid var(--chernila); border-radius: var(--radius); box-shadow: var(--ten) var(--ten) 0 var(--chernila);
+  padding: 5px 10px 6px 52px; color: var(--belyj); min-height: 48px; font-size: var(--t-mal); line-height: 1.3; }
+.punkt.fon-shafran, .punkt.fon-bumaga, .punkt.fon-belyj { color: var(--chernila); }
+.punkt b { display: block; font-family: var(--shrift-slova); font-weight: 400; font-size: clamp(14px, 2.1dvh, 18px); text-transform: uppercase; }
+.punkt span { display: block; font-weight: 600; }
+.punkt q { display: block; font-style: italic; font-weight: 700; }
+.punkt-n { position: absolute; left: 8px; top: 7px; width: 34px; height: 34px; border-radius: 50%; background: var(--bumaga); color: var(--chernila);
+  border: var(--kontur) solid var(--chernila); display: grid; place-items: center; font-family: var(--shrift-slova); font-size: 17px; }
+
+/* Найти место: куски фразы и кадры плёнки */
+.kuski { line-height: 1.9; }
+.kusok { display: inline; background: var(--belyj); padding: 2px 6px; box-shadow: 2px 2px 0 var(--chernila); border-width: 2px; border-radius: 8px;
+  font-weight: 600; font-size: inherit; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.plenka { display: grid; gap: var(--shag); }
+.plenka .kusok { display: flex; align-items: center; gap: 10px; text-align: left; padding: 6px 10px 6px 6px; border-width: var(--kontur); border-radius: var(--radius);
+  box-shadow: var(--ten) var(--ten) 0 var(--chernila); min-height: var(--knopka-mal); font-size: var(--t-otvet); }
+
+/* Порядок */
+.poryadok { display: grid; gap: var(--shag); }
+.kartochka { display: flex; align-items: center; gap: 10px; min-height: var(--knopka-mal); background: var(--belyj); text-align: left; padding: 6px 10px 6px 6px;
+  font-weight: 600; font-size: var(--t-otvet); }
+.kartochka.gotova { background: var(--shafran); opacity: 1; }
+.kartochka.migaet { animation: drozh 0.3s steps(4); background: var(--granat); color: var(--belyj); }
+@keyframes drozh { 25% { transform: translateX(-6px); } 50% { transform: translateX(6px); } 75% { transform: translateX(-3px); } }
+
+/* Две корзины */
+.korziny { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.kn-korzina { min-height: clamp(70px, 12dvh, 110px); color: var(--belyj); padding: 8px; display: grid; align-content: center; gap: 2px; }
+.kn-korzina.fon-shafran { color: var(--chernila); }
+.kn-korzina b { font-family: var(--shrift-slova); font-weight: 400; font-size: clamp(16px, 2.4dvh, 21px); text-transform: uppercase; }
+.kn-korzina span { font-size: var(--t-mal); font-weight: 600; }
+
+/* Выбор нескольких */
+.vybor { display: grid; grid-template-columns: 1fr 1fr; gap: var(--shag); }
+.kn-vybor { min-height: var(--knopka-mal); background: var(--belyj); padding: 6px 8px; font-weight: 600; font-size: var(--t-mal); line-height: 1.25; text-align: left; }
+.kn-vybor.vybran { background: var(--shafran); outline: 3px solid var(--chernila); outline-offset: -7px; }
+
+/* ---- Разговор: сцена с героем, последняя пара реплик, ответы ---- */
+.razgovor { padding-bottom: max(env(safe-area-inset-bottom), 10px); }
+.scena { position: relative; flex: 1 1 0; min-height: 90px; margin: 6px -14px 0; border-top: var(--kontur) solid var(--chernila);
+  border-bottom: var(--kontur) solid var(--chernila); display: flex; justify-content: center; overflow: hidden; }
+.scena .figura { flex: none; height: 96%; align-self: flex-end; }
+.schet { position: absolute; z-index: 2; top: 6px; left: 10px; display: grid; gap: 4px; justify-items: start; }
+.chip { border: var(--kontur) solid var(--chernila); border-radius: 999px; padding: 0 8px; font-weight: 800; font-size: var(--t-mal); color: var(--chernila); }
 .chip.fon-izumrud { color: var(--belyj); }
-.lenta { flex: 1; overflow-y: auto; padding: 12px 0; display: flex; flex-direction: column; gap: 10px; }
-.repl { max-width: 86%; border: var(--kontur) solid var(--chernila); border-radius: var(--radius); padding: 8px 12px; background: var(--belyj); font-weight: 600; }
-.repl b { display: block; font-family: var(--shrift-slova); font-weight: 400; font-size: 12px; text-transform: uppercase; opacity: 0.75; }
-.repl-ilyas { align-self: flex-end; background: var(--nebo); color: var(--belyj); }
-.repl-musa { align-self: center; max-width: 100%; background: var(--shafran); }
-.niz-prak { display: grid; gap: 10px; }
-.shag-imya { margin: 0; font-weight: 800; }
-.metka { display: inline-block; border: var(--kontur) solid var(--chernila); border-radius: 999px; padding: 0 10px; color: var(--belyj); font-size: 14px; }
-.metka.fon-shafran { color: var(--chernila); }
-.varianty-rech { display: grid; gap: 10px; }
-.kn-rech { background: var(--belyj); text-align: left; padding: 10px 14px; font-weight: 600; font-size: 16px; line-height: 1.35; }
+.shkala { position: absolute; z-index: 2; left: 10px; right: 10px; bottom: 6px; height: 26px; background: var(--bumaga); border: var(--kontur) solid var(--chernila); border-radius: 999px; overflow: hidden; }
+.shkala i { display: block; height: 100%; background: var(--izumrud); }
+.shkala span { position: absolute; inset: 0; display: grid; place-items: center; font-size: var(--t-mal); font-weight: 800; }
+.kanal { position: absolute; z-index: 2; top: 6px; right: 10px; border: var(--kontur) solid var(--chernila); border-radius: 999px; background: var(--chernila); color: var(--belyj);
+  padding: 0 10px; font-weight: 800; font-size: var(--t-mal); }
+.lenta { flex: none; display: flex; flex-direction: column; gap: 6px; padding: var(--shag) 0 6px; }
+.repl { max-width: 92%; border: var(--kontur) solid var(--chernila); border-radius: var(--radius); padding: 4px 10px; background: var(--belyj); font-weight: 600; font-size: var(--t-otvet); line-height: 1.3; }
+.repl b { display: block; font-family: var(--shrift-slova); font-weight: 400; font-size: 11px; text-transform: uppercase; opacity: 0.75; }
+.repl-prodavec { align-self: flex-end; background: var(--nebo); color: var(--belyj); }
+.v-telefone .repl-pokupatel { border-bottom-left-radius: 2px; }
+.v-telefone .repl-prodavec { border-bottom-right-radius: 2px; background: var(--izumrud); }
+.niz-razg { flex: none; display: grid; gap: var(--shag); padding-right: var(--ten); }
 
-/* Итог */
-.itog-verh { position: relative; height: 44dvh; display: flex; }
-.itog-verh .figura { height: 90%; }
-.karta { position: relative; z-index: 2; background: var(--bumaga); border: var(--kontur) solid var(--chernila); border-radius: var(--radius);
-  box-shadow: var(--ten) var(--ten) 0 var(--chernila); padding: 14px 16px; margin-top: 12px; }
-.karta h2 { font-family: var(--shrift-slova); font-weight: 400; font-size: 18px; text-transform: uppercase; margin: 14px 0 2px; }
-.karta p { margin: 4px 0; }
-.itog-chisla { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.itog-chisla div { font-size: 14px; font-weight: 600; }
-.itog-chisla b { display: block; font-family: var(--shrift-slova); font-weight: 400; font-size: 24px; }
+/* ---- Итог главы ---- */
+.itog-verh { position: relative; flex: 1 1 0; min-height: 80px; display: flex; }
+.itog-verh .figura { flex: 1; }
+.itog .slova { top: 2%; }
+.karta { position: relative; z-index: 2; flex: none; background: var(--bumaga); border: var(--kontur) solid var(--chernila); border-radius: var(--radius);
+  box-shadow: var(--ten) var(--ten) 0 var(--chernila); padding: 8px 14px; margin-top: 6px; font-size: var(--t-otvet); }
+.karta h2 { font-family: var(--shrift-slova); font-weight: 400; font-size: var(--t); text-transform: uppercase; margin: 6px 0 0; }
+.karta p { margin: 2px 0; }
+.itog-chisla { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.itog-chisla div { font-size: var(--t-mal); font-weight: 600; line-height: 1.2; }
+.itog-chisla b { display: block; font-family: var(--shrift-slova); font-weight: 400; font-size: clamp(16px, 2.6dvh, 22px); }
+.itog .niz-zad { margin-top: var(--shag); }
+
+.versii .karta ul { margin: 4px 0; padding-left: 20px; }
 
 @media (min-width: 700px) {
   .ekran { border-left: var(--kontur) solid var(--chernila); border-right: var(--kontur) solid var(--chernila); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .slova span, .linii { animation: none; }
+  .slova span, .linii, .kartochka.migaet { animation: none; }
   .slova, .geroj { filter: none; }
 }
