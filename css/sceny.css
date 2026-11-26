@@ -1,0 +1,116 @@
+/* Вид 1.0: обложка, ловушка, комикс, открытие, карта-дорога, карточки приёмов, награда. Цвета и размеры из tokens.css.
+   Движение рывками (steps), как у рисованного мультфильма. «Меньше движения»: всё стоит. */
+
+/* ---- Обложка главы ---- */
+.oblozhka { justify-content: flex-end; }
+.obl-ramka { position: absolute; inset: 0; overflow: hidden; z-index: 0; }
+.obl-fon { width: 100%; height: 100%; display: block; object-fit: cover; object-position: 50% 20%; z-index: 0;
+  animation: naezd 9s steps(72) both; }
+.oblozhka::after { content: ""; position: absolute; inset: 55% 0 0; background: var(--chernila); opacity: 0.55; z-index: 0; }
+.obl-metka { position: absolute; z-index: 1; top: max(env(safe-area-inset-top), 12px); left: 14px; margin: 0; font-family: var(--shrift-slova); font-size: 15px;
+  text-transform: uppercase; background: var(--shafran); border: var(--kontur) solid var(--chernila); border-radius: 999px; padding: 4px 12px;
+  box-shadow: var(--ten) var(--ten) 0 var(--chernila); }
+.oblozhka .slova { top: auto; bottom: calc(var(--knopka) + 13dvh); z-index: 1; }
+.oblozhka .niz { margin-top: 0; z-index: 1; }
+.obl-vopros { margin: 0; color: var(--belyj); font-weight: 700; font-size: clamp(15px, 2.3dvh, 19px); text-align: center; text-wrap: balance; }
+.oblozhka .kn-prozr { color: var(--bumaga); }
+@keyframes naezd { from { transform: scale(1.08) translateY(1.5%); } to { transform: none; } }
+
+/* ---- Ловушка ---- */
+.kn-otvet.vybor-lov { opacity: 1; background: var(--shafran); }
+.vybor-lov .bukva { background: var(--chernila); }
+.otzyv-lov { background: var(--nebo); color: var(--belyj); animation: vyskok 0.3s steps(3) both; }
+
+/* ---- Комикс ---- */
+.komiks { gap: var(--shag); }
+.kom-kadr { position: relative; flex: 1 1 0; min-height: 0; border: var(--kontur) solid var(--bumaga); border-radius: var(--radius); overflow: hidden;
+  box-shadow: var(--ten) var(--ten) 0 var(--bumaga); background: var(--bumaga); animation: shtorka 0.32s steps(4) both; }
+.kom-kadr img { width: 100%; height: 100%; object-fit: cover; display: block; user-select: none;
+  animation: naezd 7s steps(56) both; }
+.kom-slovo { position: absolute; top: 10px; left: 10px; font-family: var(--shrift-slova); font-weight: 400; font-size: clamp(26px, 5dvh, 44px); color: var(--belyj);
+  -webkit-text-stroke: var(--kontur) var(--chernila); paint-order: stroke fill; transform: rotate(-6deg); animation: vlet 0.42s steps(5) both; }
+.kom-niz { flex: none; display: grid; gap: var(--shag); }
+.kom-oblako { color: var(--chernila); margin-top: calc(-4dvh - var(--shag)); margin-right: 18px; animation: vyskok 0.36s 0.25s steps(4) both; }
+.kom-oblako::before { content: ""; position: absolute; top: -16px; left: 38px; border: solid transparent; border-bottom-color: var(--chernila); border-width: 0 10px 16px; }
+.kom-avtor { background: var(--shafran); margin-right: 0; }
+.kom-avtor::before { display: none; }
+.kom-oblako p { font-size: clamp(15px, 2.3dvh, 19px); }
+.kom-tochki { display: flex; justify-content: center; gap: 8px; }
+.kom-tochki i { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--bumaga); }
+.kom-tochki i.bylo { background: var(--bumaga); opacity: 0.5; }
+.kom-tochki i.seychas { background: var(--shafran); }
+@keyframes shtorka { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0); } }
+@keyframes vyskok { 0% { transform: scale(0.4) rotate(-4deg); opacity: 0; } 60% { transform: scale(1.06) rotate(1deg); opacity: 1; } 100% { transform: none; } }
+
+/* ---- Открытие ---- */
+.otkrytie .slova { top: 8%; }
+.otk-karty { position: relative; z-index: 2; display: grid; gap: var(--shag); margin-top: 13dvh; }
+.otk-karty > div { border: var(--kontur) solid var(--chernila); border-radius: var(--radius); box-shadow: var(--ten) var(--ten) 0 var(--chernila); padding: 8px 14px; }
+.otk-karty b { font-family: var(--shrift-slova); font-weight: 400; font-size: var(--t-mal); text-transform: uppercase; }
+.otk-karty p { margin: 2px 0 0; font-weight: 700; }
+.otk-bylo { background: var(--bumaga); opacity: 0.85; transform: rotate(-1.5deg); animation: vyskok 0.3s 0.2s steps(3) both; }
+.otk-bylo p { text-decoration: line-through; text-decoration-color: var(--granat); text-decoration-thickness: 3px; }
+.otk-stalo { background: var(--shafran); transform: rotate(1deg); animation: vyskok 0.36s 0.7s steps(4) both; }
+.otk-stalo p { font-size: clamp(16px, 2.6dvh, 22px); line-height: 1.25; }
+.otkrytie .niz { margin-top: -4dvh; }
+
+/* ---- Карта-дорога ---- */
+.karta-glav { gap: var(--shag); }
+.karta-shapka { position: relative; flex: none; height: clamp(110px, 21dvh, 190px); margin: 0 -14px; overflow: hidden; border-bottom: var(--kontur) solid var(--bumaga); }
+.karta-shapka > img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0%; display: block; }
+.karta-shapka .kn-malaya { position: absolute; top: 8px; right: 12px; }
+.karta-titul { position: absolute; left: 12px; top: 8px; }
+.karta-titul h1 { margin: 0; font-family: var(--shrift-slova); font-weight: 400; font-size: clamp(22px, 3.6dvh, 32px); line-height: 1; text-transform: uppercase;
+  color: var(--belyj); -webkit-text-stroke: var(--kontur) var(--chernila); paint-order: stroke fill; }
+.karta-titul p { display: inline-block; margin: 4px 0 0; background: var(--chernila); color: var(--bumaga); font-weight: 700; font-size: var(--t-mal); padding: 0 8px; border-radius: 6px; }
+.zvanie { position: absolute; left: 12px; bottom: 8px; display: flex; align-items: center; gap: 8px; background: var(--bumaga); color: var(--chernila);
+  border: var(--kontur) solid var(--chernila); border-radius: 999px; padding: 2px 12px 2px 4px; box-shadow: var(--ten) var(--ten) 0 var(--chernila); }
+.zvanie b { font-family: var(--shrift-slova); font-weight: 400; text-transform: uppercase; background: var(--shafran); border: 2px solid var(--chernila); border-radius: 999px; padding: 0 8px; }
+.zvanie span { font-size: var(--t-mal); font-weight: 700; }
+.doroga { position: relative; flex: 1 1 0; min-height: 0; }
+.doroga svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.doroga polyline { fill: none; stroke: var(--bumaga); stroke-width: 6; stroke-dasharray: 2 14; stroke-linecap: round; vector-effect: non-scaling-stroke; opacity: 0.6; }
+.doroga ol { position: relative; height: 100%; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(4, 1fr); }
+.doroga li { display: grid; place-items: center; min-height: 0; }
+.uzel { background: none; border: 0; padding: 0; display: grid; justify-items: center; gap: 2px; color: var(--bumaga); max-width: 100%; }
+.uzel-krug { width: clamp(44px, 7.5dvh, 64px); height: clamp(44px, 7.5dvh, 64px); border-radius: 50%; display: grid; place-items: center;
+  font-family: var(--shrift-slova); font-size: clamp(18px, 3dvh, 26px); color: var(--belyj); border: var(--kontur) solid var(--bumaga);
+  box-shadow: var(--ten) var(--ten) 0 var(--bumaga); }
+.uzel b { font-weight: 700; font-size: var(--t-mal); line-height: 1.1; text-align: center; max-width: 13ch; background: var(--chernila); border-radius: 4px; padding: 0 4px; }
+.uzel:active .uzel-krug { transform: translate(var(--ten), var(--ten)); box-shadow: none; }
+.uzel.projdena .uzel-krug { background: var(--izumrud); }
+.uzel.seychas .uzel-krug { background: var(--shafran); color: var(--chernila); animation: zovet 1s steps(2) infinite; }
+.uzel.zakryta { cursor: default; opacity: 0.45; }
+.uzel.zakryta .uzel-krug { background: var(--chernila); font-size: clamp(16px, 2.4dvh, 20px); box-shadow: none; }
+@keyframes zovet { 50% { transform: scale(1.12) rotate(-4deg); } }
+.karta-glav .karta-niz { display: grid; gap: 2px; padding: 0; }
+
+/* ---- Карточки приёмов ---- */
+.kollekciya { flex: 1 1 0; min-height: 0; list-style: none; margin: var(--shag) 0 0; padding: 0 var(--ten) var(--ten) 0; display: grid;
+  grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(4, 1fr); gap: var(--shag); }
+.kartochka-priyom { position: relative; min-height: 0; border: var(--kontur) solid var(--bumaga); border-radius: var(--radius); overflow: hidden;
+  box-shadow: var(--ten) var(--ten) 0 var(--bumaga); display: flex; flex-direction: column; justify-content: flex-end; }
+.kartochka-priyom img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.kartochka-priyom b { position: relative; background: var(--bumaga); color: var(--chernila); font-family: var(--shrift-slova); font-weight: 400;
+  font-size: clamp(10px, 1.5dvh, 13px); line-height: 1.1; text-transform: uppercase; padding: 3px 6px; border-top: var(--kontur) solid var(--chernila); }
+.kp-n { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--shrift-slova); font-size: clamp(28px, 5dvh, 44px); color: var(--belyj); }
+.kartochka-priyom.zakryta { background: var(--chernila); border-style: dashed; box-shadow: none; opacity: 0.6; }
+.kartochka-priyom.zakryta b { background: none; color: var(--bumaga); border-top: 0; }
+
+/* ---- Награда ---- */
+.nagrada { gap: var(--shag); }
+.nagr-verh { position: relative; flex: 1 1 0; min-height: 0; display: grid; place-items: center; overflow: hidden; margin: 0 -14px; }
+.nagrada .kartochka-priyom.perevorot { position: relative; z-index: 1; height: 96%; aspect-ratio: 3 / 4; max-width: 80%; border-color: var(--chernila);
+  box-shadow: 6px 6px 0 var(--chernila); animation: perevorot 0.7s steps(7) both; }
+.nagrada .kartochka-priyom b { font-size: clamp(13px, 2.2dvh, 18px); padding: 6px 8px; text-align: center; }
+@keyframes perevorot { 0% { transform: perspective(600px) rotateY(180deg) scale(0.6); } 70% { transform: perspective(600px) rotateY(-10deg) scale(1.05); } 100% { transform: none; } }
+.nagr-metka { margin: 0; text-align: center; font-family: var(--shrift-slova); font-size: var(--t-mal); text-transform: uppercase; }
+.nagr-karta { flex: none; }
+.nagr-karta h2 { margin: var(--shag) 0 0; font-family: var(--shrift-slova); font-weight: 400; font-size: var(--t-mal); text-transform: uppercase; }
+.nagr-karta p { margin: 2px 0 0; font-size: var(--t-otvet); }
+.nagr-pravilo { font-weight: 800; }
+.nagr-namek { margin: 0; font-weight: 700; font-size: var(--t-otvet); text-align: center; }
+
+@media (prefers-reduced-motion: reduce) {
+  .obl-fon, .kom-kadr, .kom-kadr img, .kom-slovo, .kom-oblako, .otk-bylo, .otk-stalo, .uzel.seychas .uzel-krug, .perevorot, .otzyv-lov { animation: none; }
+}

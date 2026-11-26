@@ -1,7 +1,8 @@
-// Список глав курса. Одна книга: одна тема, у каждой главы своя подача и своё место (кодекс).
+// Список глав курса. Одна глава: одно открытие и одна карточка приёма (docs/Открытия.md).
 // Файл главы: js/glavaN.js, в нём GLAVA с кадрами. Цвет плитки: имя цвета из tokens.css.
+// karta: название карточки приёма (нет: название главы). img: рисунок карточки (есть у глав нового вида).
 export const GLAVY = [
-  { n: 1, nazv: 'Сначала вопрос', mesto: 'Рынок', cvet: 'granat' },
+  { n: 1, nazv: 'Сначала беда', mesto: 'Рынок', cvet: 'granat', karta: 'Сначала беда', img: 'img/glava1/karta.webp' },
   { n: 2, nazv: 'Пусть говорит он', mesto: 'Instagram', cvet: 'nebo' },
   { n: 3, nazv: 'Не больше двух', mesto: 'Рынок', cvet: 'shafran' },
   { n: 4, nazv: 'Где болит', mesto: 'WhatsApp', cvet: 'izumrud' },
@@ -14,5 +15,8 @@ export const GLAVY = [
   { n: 11, nazv: 'Шаг вперёд', mesto: 'Крупная сделка', cvet: 'shafran' },
   { n: 12, nazv: 'Одна привычка', mesto: 'Экзамен', cvet: 'izumrud' },
 ];
+
+// Глава открыта, если пройдена прошлая. Первая открыта всегда.
+export const otkryta = (n, projdeno) => n === 1 || !!projdeno[n - 1] || !!projdeno[n];
 
 export const zagruzit = (n) => import(`./glava${n}.js`).then((m) => m.GLAVA);

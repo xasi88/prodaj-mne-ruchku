@@ -1,11 +1,11 @@
 // Оболочка: карта глав, кадры главы по порядку, память в localStorage, весь экран.
 // Адреса: «#» карта глав, «#g3» глава 3, «#versii» что нового. Экраны заданий: ekrany.js.
-import { GLAVY, zagruzit } from './glavy.js?v=e8e96f9e';
-import { geroj, osnova, ryvok } from './geroi.js?v=e8e96f9e';
-import { ZADACHI, esc, figura, slova, kn } from './ekrany.js?v=e8e96f9e';
-import * as S from './schet.js?v=e8e96f9e';
-import { VERSIONS } from './versions.js?v=e8e96f9e';
-import { igrat, razreshit, pereklyuchit, zvukVklyuchen } from './zvuki.js?v=e8e96f9e';
+import { GLAVY, zagruzit, otkryta } from './glavy.js?v=050dc9ac';
+import { geroj, osnova, ryvok } from './geroi.js?v=050dc9ac';
+import { ZADACHI, esc, figura, slova, kn } from './ekrany.js?v=050dc9ac';
+import * as S from './schet.js?v=050dc9ac';
+import { VERSIONS } from './versions.js?v=050dc9ac';
+import { igrat, razreshit, pereklyuchit, zvukVklyuchen } from './zvuki.js?v=050dc9ac';
 
 const app = document.getElementById('app');
 const tiho = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -80,22 +80,49 @@ function vesEkran() {
   if (nuzhenVesEkran()) document.documentElement.requestFullscreen({ navigationUI: 'hide' }).catch(() => {});
 }
 
-// ---- Карта глав ----
+// ---- Карта-дорога: главы змейкой по три, звание, карточки ----
+const sobrano = () => GLAVY.filter((g) => projdeno[g.n]).length;
+const ZMEJKA = [0, 1, 2, 5, 4, 3, 6, 7, 8, 11, 10, 9]; // место в сетке 3x4 → номер главы по дороге
 function karta() {
   glava = null;
+  const n = sobrano();
+  const sled = GLAVY.find((g) => !projdeno[g.n]);
   app.innerHTML = `<section class="ekran fon-chernila karta-glav">
-    <header class="karta-verh"><div><h1>Продай мне ручку</h1><p>Продажи без уговоров</p></div>${knopkaZvuka()}</header>
-    <ol class="plitki">${GLAVY.map((g) => {
-      const p = projdeno[g.n];
-      return `<li><button class="plitka fon-${g.cvet}" data-d="glava" data-g="${g.n}">
-        <span class="plitka-n">${g.n}</span><b>${esc(g.nazv)}</b><span class="plitka-mesto">${esc(g.mesto)}</span>
-        ${p ? `<span class="plitka-gotovo">✓ ${p.verno} из ${p.vsego}</span>` : ''}</button></li>`;
-    }).join('')}</ol>
-    <div class="karta-niz">${knopkaUstanovki()}<button class="kn-prozr" data-d="versii">Что нового</button></div></section>`;
+    <header class="karta-shapka"><img src="img/glava1/oblozhka.webp" alt="" draggable="false">
+      <div class="karta-titul"><h1>Продай мне ручку</h1><p>Продажи без уговоров</p></div>${knopkaZvuka()}
+      <div class="zvanie"><b>${esc(S.zvanie(n))}</b><span>${n} из ${GLAVY.length} карточек</span></div></header>
+    <div class="doroga"><svg viewBox="0 0 6 8" preserveAspectRatio="none" aria-hidden="true"><polyline points="1,1 5,1 5,3 1,3 1,5 5,5 5,7 1,7"/></svg>
+      <ol>${ZMEJKA.map((i) => {
+        const g = GLAVY[i];
+        const p = projdeno[g.n];
+        const otkr = otkryta(g.n, projdeno);
+        const kl = p ? 'projdena' : g === sled ? 'seychas' : otkr ? '' : 'zakryta';
+        return `<li><button class="uzel ${kl}" data-d="glava" data-g="${g.n}" ${otkr ? '' : 'disabled'} aria-label="Глава ${g.n}: ${esc(g.nazv)}${otkr ? '' : ', закрыта'}">
+          <span class="uzel-krug fon-${g.cvet}">${p ? '✓' : otkr ? g.n : '🔒'}</span><b>${esc(g.nazv)}</b></button></li>`;
+      }).join('')}</ol></div>
+    <div class="karta-niz">${sled ? `<button class="kn" data-d="glava" data-g="${sled.n}">${projdeno[1] ? 'Дальше' : 'Начать'}: глава ${sled.n}</button>` : ''}
+      <div class="ryad"><button class="kn-prozr" data-d="kartochki">Мои карточки</button><button class="kn-prozr" data-d="versii">Что нового</button>${knopkaUstanovki()}</div></div></section>`;
+}
+
+// Коллекция карточек приёмов: собранные с рисунком, остальные закрыты
+function kartochki() {
+  app.innerHTML = `<section class="ekran fon-chernila kartochki"><header class="verh"><button class="kn-malaya" data-d="iz-versij" aria-label="Назад">←</button>
+    <span class="verh-imya">Карточки: ${sobrano()} из ${GLAVY.length}</span><span></span><span></span></header>
+    <ol class="kollekciya">${GLAVY.map((g) => projdeno[g.n]
+      ? `<li class="kartochka-priyom fon-${g.cvet}">${g.img ? `<img src="${g.img}" alt="" draggable="false">` : `<span class="kp-n">${g.n}</span>`}<b>${esc(g.karta || g.nazv)}</b></li>`
+      : `<li class="kartochka-priyom zakryta"><span class="kp-n">?</span><b>Глава ${g.n}</b></li>`).join('')}</ol></section>`;
 }
 
 // ---- Кадры главы ----
 function zastavka(kd) {
+  // Обложка главы: рисунок Codex на весь экран, слова влетают, одна кнопка
+  if (kd.oblozhka) {
+    app.innerHTML = `<section class="ekran fon-chernila oblozhka"><div class="obl-ramka"><img class="obl-fon" src="${kd.oblozhka}" alt="" draggable="false"></div>
+      <p class="obl-metka">Глава ${glava.nomer}</p>${slova(kd.slova, 'chernila')}
+      <div class="niz"><p class="obl-vopros">${esc(kd.vopros)}</p>${kn('dalshe', 'Начать главу')}${glava.nomer === 1 ? knopkaUstanovki() : ''}</div></section>`;
+    igrat('vlet');
+    return;
+  }
   let i = 0;
   const scena = () => {
     const sc = kd.sceny[i];
@@ -125,6 +152,8 @@ function itog(kd) {
   projdeno = { ...projdeno, [glava.nomer]: { verno: s.verno, vsego: s.vsego } };
   pisat(S.KLYUCH_PROJDENO, projdeno);
   const sled = GLAVY.find((g) => g.n === glava.nomer + 1);
+  const g = GLAVY.find((x) => x.n === glava.nomer);
+  if (g.img) { nagrada(kd, s, g, sled); return; }
   app.innerHTML = `<section class="ekran fon-shafran itog">${verh()}
     <div class="itog-verh">${slova(kd.slova || ['ГЛАВА', 'ПРОЙДЕНА'], 'shafran')}${figura(kd.kto || 'ilyas', kd.pozy || ['mashet', 'mashet2'], 250)}</div>
     <div class="karta">
@@ -136,6 +165,24 @@ function itog(kd) {
     </div>
     <div class="niz-zad">${sled ? `<button class="kn" data-d="glava" data-g="${sled.n}">Глава ${sled.n}: ${esc(sled.nazv)}</button>` : ''}
       <div class="ryad">${kn('snova', 'Пройти снова', 'kn-prozr')}${kn('karta', 'Все главы', 'kn-prozr')}</div>${knopkaUstanovki()}</div></section>`;
+  igrat('final');
+}
+
+// Награда главы нового вида: карточка приёма переворачивается, задание на сегодня, намёк на следующую главу
+function nagrada(kd, s, g, sled) {
+  const n = sobrano();
+  app.innerHTML = `<section class="ekran fon-shafran nagrada">${verh()}
+    <div class="nagr-verh"><div class="linii"></div>
+      <div class="kartochka-priyom perevorot fon-${g.cvet}"><img src="${g.img}" alt="" draggable="false"><b>${esc(g.karta)}</b></div></div>
+    <p class="nagr-metka">Карточка ${n} из ${GLAVY.length}. Звание: ${esc(S.zvanie(n))}</p>
+    <div class="karta nagr-karta">
+      <div class="itog-chisla"><div><b>${s.verno} из ${s.vsego}</b>с первого раза</div>
+      ${s.razgovor ? `<div><b>${S.rubli(s.vyruchka)}</b>выручка</div><div><b>${S.soZnakom(s.doverie)}</b>доверие</div>` : ''}</div>
+      <p class="nagr-pravilo">${esc(kd.pravilo)}</p>
+      <h2>Сегодня в жизни</h2><p>${esc(kd.zadanie)}</p>
+    </div>
+    <div class="niz-zad">${sled ? `${kd.namek ? `<p class="nagr-namek">${esc(kd.namek)}</p>` : ''}<button class="kn" data-d="glava" data-g="${sled.n}">Глава ${sled.n}: ${esc(sled.nazv)}</button>` : ''}
+      <div class="ryad">${kn('snova', 'Пройти снова', 'kn-prozr')}${kn('karta', 'Дорога', 'kn-prozr')}</div></div></section>`;
   igrat('final');
 }
 
@@ -168,6 +215,7 @@ let zhdu = 0;
 async function pokazat() {
   ochistit();
   if (location.hash === '#versii') { versii(); return; }
+  if (location.hash === '#kartochki') { glava = null; kartochki(); return; }
   const m = /^#g(\d{1,2})$/.exec(location.hash);
   const n = m && GLAVY.some((g) => g.n === Number(m[1])) ? Number(m[1]) : null;
   if (!n) { karta(); return; }
@@ -212,6 +260,7 @@ app.addEventListener('click', (e) => {
   else if (d === 'karta') location.hash = '';
   else if (d === 'snova') { sost = S.pustoe(); idti(0); }
   else if (d === 'versii') location.hash = '#versii';
+  else if (d === 'kartochki') location.hash = '#kartochki';
   else if (d === 'iz-versij') location.hash = '';
 });
 addEventListener('hashchange', pokazat);

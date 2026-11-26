@@ -125,3 +125,7 @@ export function dolyaPokupatelya(lenta) {
 
 export const rubli = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' ₽';
 export const soZnakom = (n) => (n > 0 ? '+' + n : n < 0 ? '−' + Math.abs(n) : '0');
+
+// Звание растёт с числом собранных карточек
+export const ZVANIYA = [[0, 'Новичок'], [1, 'Ученик'], [4, 'Продавец'], [8, 'Мастер'], [12, 'Мастер продаж']];
+export const zvanie = (n) => ZVANIYA.filter(([m]) => n >= m).at(-1)[1];

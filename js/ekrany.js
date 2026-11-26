@@ -1,8 +1,9 @@
 // Экраны заданий. У каждого вида: pokaz(kd, t, verh) даёт HTML, klik(kd, t, b) меняет t и говорит, что записать.
 // t: временное состояние кадра, живёт, пока человек на кадре. Первые ответы пишет app.js (schet.js, zapisat).
 // Варианты ответа: буквы А-Г сверху вниз, порядок из данных главы (тест проверяет, что верная буква меняется).
-import { geroj, REAKCII, IMENA } from './geroi.js?v=e8e96f9e';
-import { BUKVY, dolyaPokupatelya, rubli, soZnakom, schetRazgovora } from './schet.js?v=e8e96f9e';
+import { geroj, REAKCII, IMENA } from './geroi.js?v=050dc9ac';
+import { BUKVY, dolyaPokupatelya, rubli, soZnakom, schetRazgovora } from './schet.js?v=050dc9ac';
+import { SCENY } from './sceny.js?v=050dc9ac';
 
 export const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 
@@ -251,4 +252,4 @@ const sborka = {
   },
 };
 
-export const ZADACHI = { spisok, vopros, razgovor, najdi, poryadok, korziny, vybor, sborka };
+export const ZADACHI = { spisok, vopros, razgovor, najdi, poryadok, korziny, vybor, sborka, ...SCENY };
