@@ -1,6 +1,6 @@
 // Глава 1 «Сначала беда». Вид 1.0: ловушка, комикс, открытие, разговор, карточка (docs/Открытия.md, строка 1).
 // Основа: Нил Рекхэм, «СПИН-продажи» (пересказ своими словами). Рисунки кадров: Codex, img/glava1/, запросы в tools/risunki.py.
-import { CHETYRE } from './vidy.js?v=5d30da3c';
+import { CHETYRE } from './vidy.js?v=723b2ee8';
 
 export const GLAVA = {
   nomer: 1,
