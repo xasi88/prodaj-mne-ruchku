@@ -1,11 +1,11 @@
 // Оболочка: карта глав, кадры главы по порядку, память в localStorage, весь экран.
 // Адреса: «#» карта глав, «#g3» глава 3, «#versii» что нового. Экраны заданий: ekrany.js.
-import { GLAVY, zagruzit, otkryta } from './glavy.js?v=050dc9ac';
-import { geroj, osnova, ryvok } from './geroi.js?v=050dc9ac';
-import { ZADACHI, esc, figura, slova, kn } from './ekrany.js?v=050dc9ac';
-import * as S from './schet.js?v=050dc9ac';
-import { VERSIONS } from './versions.js?v=050dc9ac';
-import { igrat, razreshit, pereklyuchit, zvukVklyuchen } from './zvuki.js?v=050dc9ac';
+import { GLAVY, zagruzit, otkryta } from './glavy.js?v=5d30da3c';
+import { geroj, osnova, ryvok } from './geroi.js?v=5d30da3c';
+import { ZADACHI, esc, figura, slova, kn } from './ekrany.js?v=5d30da3c';
+import * as S from './schet.js?v=5d30da3c';
+import { VERSIONS } from './versions.js?v=5d30da3c';
+import { igrat, razreshit, pereklyuchit, zvukVklyuchen } from './zvuki.js?v=5d30da3c';
 
 const app = document.getElementById('app');
 const tiho = matchMedia('(prefers-reduced-motion: reduce)').matches;

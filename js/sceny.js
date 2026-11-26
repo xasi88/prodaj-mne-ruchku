@@ -1,7 +1,7 @@
 // Новые кадры главы (с 1.0): ловушка, комикс, открытие. Глава в пять шагов: ловушка, история, открытие, проба, карточка.
 // У каждого вида pokaz(kd, t, verh) и klik(kd, t, b), как в ekrany.js. Ловушка в счёт не идёт: она показывает, чего человек не знал.
-import { esc, kn, slova, figura } from './ekrany.js?v=050dc9ac';
-import { BUKVY } from './schet.js?v=050dc9ac';
+import { esc, kn, slova, figura } from './ekrany.js?v=5d30da3c';
+import { BUKVY } from './schet.js?v=5d30da3c';
 
 const sekciya = (kl, verh, telo) => `<section class="ekran ${kl}">${verh}${telo}</section>`;
 

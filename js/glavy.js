@@ -3,8 +3,8 @@
 // karta: название карточки приёма (нет: название главы). img: рисунок карточки (есть у глав нового вида).
 export const GLAVY = [
   { n: 1, nazv: 'Сначала беда', mesto: 'Рынок', cvet: 'granat', karta: 'Сначала беда', img: 'img/glava1/karta.webp' },
-  { n: 2, nazv: 'Пусть говорит он', mesto: 'Instagram', cvet: 'nebo' },
-  { n: 3, nazv: 'Не больше двух', mesto: 'Рынок', cvet: 'shafran' },
+  { n: 2, nazv: 'Не допрос', mesto: 'Рынок', cvet: 'nebo', karta: 'Не допрос', img: 'img/glava2/karta.webp' },
+  { n: 3, nazv: 'Пусть говорит он', mesto: 'Instagram', cvet: 'shafran' },
   { n: 4, nazv: 'Где болит', mesto: 'WhatsApp', cvet: 'izumrud' },
   { n: 5, nazv: 'Чем оборачивается', mesto: 'Кухни на заказ', cvet: 'granat' },
   { n: 6, nazv: 'Пусть скажет сам', mesto: 'Кухни на заказ', cvet: 'nebo' },
