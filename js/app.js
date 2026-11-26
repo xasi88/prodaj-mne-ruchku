@@ -1,11 +1,11 @@
 // Оболочка: карта глав, кадры главы по порядку, память в localStorage, весь экран.
 // Адреса: «#» карта глав, «#g3» глава 3, «#versii» что нового. Экраны заданий: ekrany.js.
-import { GLAVY, zagruzit, otkryta } from './glavy.js?v=723b2ee8';
-import { geroj, osnova, ryvok } from './geroi.js?v=723b2ee8';
-import { ZADACHI, esc, figura, slova, kn } from './ekrany.js?v=723b2ee8';
-import * as S from './schet.js?v=723b2ee8';
-import { VERSIONS } from './versions.js?v=723b2ee8';
-import { igrat, razreshit, pereklyuchit, zvukVklyuchen } from './zvuki.js?v=723b2ee8';
+import { GLAVY, zagruzit, otkryta } from './glavy.js?v=9de95619';
+import { geroj, osnova, ryvok } from './geroi.js?v=9de95619';
+import { ZADACHI, esc, figura, slova, kn } from './ekrany.js?v=9de95619';
+import * as S from './schet.js?v=9de95619';
+import { VERSIONS } from './versions.js?v=9de95619';
+import { igrat, razreshit, pereklyuchit, zvukVklyuchen } from './zvuki.js?v=9de95619';
 
 const app = document.getElementById('app');
 const tiho = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -73,9 +73,17 @@ function ustanovit(b) {
     b.disabled = true;
   }
 }
-// Телефон и окно с ярлыка: первое касание раскрывает приложение на весь экран (браузер требует касания)
+// Телефон и окно с ярлыка: первое касание раскрывает приложение на весь экран (браузер требует касания).
+// Окно уже на весь экран (ярлык с --start-fullscreen, установленное приложение): ничего не делать, иначе экран мигнёт.
 const nuzhenVesEkran = () => document.fullscreenEnabled && !document.fullscreenElement
+  && !matchMedia('(display-mode: fullscreen)').matches
   && (matchMedia('(pointer: coarse)').matches || !matchMedia('(display-mode: browser)').matches);
+// Окно с ярлыка на компьютере: Chrome на весь экран, Escape из него не выводит. Закрыть окно может только само приложение,
+// и только если у окна нет истории: поэтому переходы здесь без записи в историю (location.replace). Телефон не трогаем: там «Назад».
+const oknoPK = matchMedia('(display-mode: fullscreen)').matches && !/android|iphone|ipad|ipod/i.test(navigator.userAgent);
+const perejti = (h) => { if (oknoPK) location.replace(h || '#'); else location.hash = h; };
+const knopkaZakryt = () => oknoPK ? `<button class="kn-malaya kn-zakryt" data-d="zakryt" aria-label="Закрыть приложение">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>` : '';
 function vesEkran() {
   if (nuzhenVesEkran()) document.documentElement.requestFullscreen({ navigationUI: 'hide' }).catch(() => {});
 }
@@ -89,7 +97,7 @@ function karta() {
   const sled = GLAVY.find((g) => !projdeno[g.n]);
   app.innerHTML = `<section class="ekran fon-chernila karta-glav">
     <header class="karta-shapka"><img src="img/glava1/oblozhka.webp" alt="" draggable="false">
-      <div class="karta-titul"><h1>Продай мне ручку</h1><p>Продажи без уговоров</p></div>${knopkaZvuka()}
+      <div class="karta-titul"><h1>Продай мне ручку</h1><p>Продажи без уговоров</p></div>${knopkaZakryt()}${knopkaZvuka()}
       <div class="zvanie"><b>${esc(S.zvanie(n))}</b><span>${n} из ${GLAVY.length} карточек</span></div></header>
     <div class="doroga"><svg viewBox="0 0 6 8" preserveAspectRatio="none" aria-hidden="true"><polyline points="1,1 5,1 5,3 1,3 1,5 5,5 5,7 1,7"/></svg>
       <ol>${ZMEJKA.map((i) => {
@@ -254,15 +262,17 @@ app.addEventListener('click', (e) => {
   else if (d === 'glava') {
     const n = Number(b.dataset.g);
     if (glava && glava.nomer === n) idti(sost.kadr);
-    location.hash = 'g' + n;
+    perejti('#g' + n);
   } else if (d === 'dalshe') idti(sost.kadr + 1);
-  else if (d === 'nazad') { if (sost.kadr > 0) idti(sost.kadr - 1); else location.hash = ''; }
-  else if (d === 'karta') location.hash = '';
+  else if (d === 'nazad') { if (sost.kadr > 0) idti(sost.kadr - 1); else perejti(''); }
+  else if (d === 'karta') perejti('');
   else if (d === 'snova') { sost = S.pustoe(); idti(0); }
-  else if (d === 'versii') location.hash = '#versii';
-  else if (d === 'kartochki') location.hash = '#kartochki';
-  else if (d === 'iz-versij') location.hash = '';
+  else if (d === 'versii') perejti('#versii');
+  else if (d === 'kartochki') perejti('#kartochki');
+  else if (d === 'iz-versij') perejti('');
+  else if (d === 'zakryt') window.close();
 });
+addEventListener('keydown', (e) => { if (e.key === 'Escape' && oknoPK) window.close(); });
 addEventListener('hashchange', pokazat);
 addEventListener('pointerdown', () => { razreshit(); vesEkran(); });
 
