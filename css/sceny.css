@@ -10,7 +10,7 @@
 .obl-metka { position: absolute; z-index: 1; top: max(env(safe-area-inset-top), 12px); left: 14px; margin: 0; font-family: var(--shrift-slova); font-size: 15px;
   text-transform: uppercase; background: var(--shafran); border: var(--kontur) solid var(--chernila); border-radius: 999px; padding: 4px 12px;
   box-shadow: var(--ten) var(--ten) 0 var(--chernila); }
-.oblozhka .slova { top: auto; bottom: calc(var(--knopka) + 13dvh); z-index: 1; }
+.oblozhka .slova { top: auto; bottom: calc(var(--knopka) + 17dvh); z-index: 1; }
 .oblozhka .niz { margin-top: 0; z-index: 1; }
 .obl-vopros { margin: 0; color: var(--belyj); font-weight: 700; font-size: clamp(15px, 2.3dvh, 19px); text-align: center; text-wrap: balance; }
 .oblozhka .kn-prozr { color: var(--bumaga); }
@@ -116,3 +116,10 @@
 @media (prefers-reduced-motion: reduce) {
   .obl-fon, .kom-kadr, .kom-kadr img, .kom-slovo, .kom-oblako, .otk-bylo, .otk-stalo, .uzel.seychas .uzel-krug, .perevorot, .otzyv-lov { animation: none; }
 }
+
+/* Знакомство и подсказки Мусы для новичка (znakomstvo.js) */
+.kn-malaya.kn-tekst { width: auto; padding: 0 14px; border-radius: 22px; font-weight: 700; font-size: 15px; }
+.obl-uznaete { margin: 0 0 -6px; color: var(--shafran); font-weight: 700; font-size: clamp(13px, 1.9dvh, 16px); text-align: center; }
+.podskazka .oblako p { font-size: clamp(15px, 2.3dvh, 19px); }
+.znakomstvo .verh { grid-template-columns: 44px auto 1fr auto; }
+.podskazka .slova { position: static; flex: none; margin-top: var(--shag); }

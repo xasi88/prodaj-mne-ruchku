@@ -1,11 +1,12 @@
 // Оболочка: карта глав, кадры главы по порядку, память в localStorage, весь экран.
 // Адреса: «#» карта глав, «#g3» глава 3, «#versii» что нового. Экраны заданий: ekrany.js.
-import { GLAVY, zagruzit, otkryta } from './glavy.js?v=9de95619';
-import { geroj, osnova, ryvok } from './geroi.js?v=9de95619';
-import { ZADACHI, esc, figura, slova, kn } from './ekrany.js?v=9de95619';
-import * as S from './schet.js?v=9de95619';
-import { VERSIONS } from './versions.js?v=9de95619';
-import { igrat, razreshit, pereklyuchit, zvukVklyuchen } from './zvuki.js?v=9de95619';
+import { GLAVY, zagruzit, otkryta } from './glavy.js?v=ecaf8208';
+import { geroj, osnova, ryvok } from './geroi.js?v=ecaf8208';
+import { ZADACHI, esc, figura, slova, kn } from './ekrany.js?v=ecaf8208';
+import * as S from './schet.js?v=ecaf8208';
+import { VERSIONS } from './versions.js?v=ecaf8208';
+import { igrat, razreshit, pereklyuchit, zvukVklyuchen } from './zvuki.js?v=ecaf8208';
+import { KADRY, ekranZnakomstva, PODSKAZKI, ekranPodskazki, KLYUCH_ZNAKOMSTVO, KLYUCH_PODSKAZKI } from './znakomstvo.js?v=ecaf8208';
 
 const app = document.getElementById('app');
 const tiho = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -16,6 +17,8 @@ let glava = null; // загруженная глава
 let sost = S.pustoe();
 let t = {}; // состояние кадра на экране
 let projdeno = S.prochitatProjdeno(chitat(S.KLYUCH_PROJDENO));
+let znI = 0; // кадр знакомства
+const videl = new Set((() => { try { return JSON.parse(chitat(KLYUCH_PODSKAZKI)) || []; } catch { return []; } })());
 
 // Таймеры кадра: стираются при смене экрана
 let taimery = [];
@@ -109,7 +112,7 @@ function karta() {
           <span class="uzel-krug fon-${g.cvet}">${p ? '✓' : otkr ? g.n : '🔒'}</span><b>${esc(g.nazv)}</b></button></li>`;
       }).join('')}</ol></div>
     <div class="karta-niz">${sled ? `<button class="kn" data-d="glava" data-g="${sled.n}">${projdeno[1] ? 'Дальше' : 'Начать'}: глава ${sled.n}</button>` : ''}
-      <div class="ryad"><button class="kn-prozr" data-d="kartochki">Мои карточки</button><button class="kn-prozr" data-d="versii">Что нового</button>${knopkaUstanovki()}</div></div></section>`;
+      <div class="ryad"><button class="kn-prozr" data-d="znakomstvo">Как играть</button><button class="kn-prozr" data-d="kartochki">Мои карточки</button><button class="kn-prozr" data-d="versii">Что нового</button>${knopkaUstanovki()}</div></div></section>`;
 }
 
 // Коллекция карточек приёмов: собранные с рисунком, остальные закрыты
@@ -127,7 +130,7 @@ function zastavka(kd) {
   if (kd.oblozhka) {
     app.innerHTML = `<section class="ekran fon-chernila oblozhka"><div class="obl-ramka"><img class="obl-fon" src="${kd.oblozhka}" alt="" draggable="false"></div>
       <p class="obl-metka">Глава ${glava.nomer}</p>${slova(kd.slova, 'chernila')}
-      <div class="niz"><p class="obl-vopros">${esc(kd.vopros)}</p>${kn('dalshe', 'Начать главу')}${glava.nomer === 1 ? knopkaUstanovki() : ''}</div></section>`;
+      <div class="niz"><p class="obl-uznaete">В этой главе вы узнаете</p><p class="obl-vopros">${esc(kd.vopros)}</p>${kn('dalshe', 'Начать главу')}${glava.nomer === 1 ? knopkaUstanovki() : ''}</div></section>`;
     igrat('vlet');
     return;
   }
@@ -194,6 +197,19 @@ function nagrada(kd, s, g, sled) {
   igrat('final');
 }
 
+// Знакомство: что за игра и как играть. Первый вход открывает его сам, потом кнопка «Как играть».
+function znakomstvo() {
+  glava = null;
+  app.innerHTML = ekranZnakomstva(znI, projdeno[1] ? 'К главам' : 'Начать главу 1');
+  igrat('vlet');
+}
+function konecZnakomstva() {
+  pisat(KLYUCH_ZNAKOMSTVO, 1);
+  znI = 0;
+  const kuda = projdeno[1] ? '' : '#g1';
+  if (location.hash.replace('#', '') === kuda.replace('#', '')) pokazat(); else perejti(kuda);
+}
+
 function versii() {
   app.innerHTML = `<section class="ekran fon-bumaga versii"><header class="verh"><button class="kn-malaya" data-d="iz-versij" aria-label="Назад">←</button><span class="verh-imya">Что нового</span><span></span><span></span></header>
     ${VERSIONS.slice(0, 3).map((v) => `<div class="karta"><h2>Версия ${v.v}</h2><ul>${v.items.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>`).join('')}</section>`;
@@ -203,6 +219,13 @@ const SVOI = { zastavka, panel, itog };
 function kadr() {
   ochistit();
   const kd = glava.kadry[sost.kadr];
+  // Первое задание этого вида: сначала Муса объясняет, что делать
+  if (PODSKAZKI[kd.vid] && !videl.has(kd.vid) && !sost.otvety[sost.kadr] && !t.shag) {
+    app.innerHTML = ekranPodskazki(PODSKAZKI[kd.vid], verh());
+    igrat('vlet');
+    app.querySelector('.kn')?.focus({ preventScroll: true });
+    return;
+  }
   if (SVOI[kd.vid]) SVOI[kd.vid](kd);
   else {
     t.shag ??= 0;
@@ -223,10 +246,11 @@ let zhdu = 0;
 async function pokazat() {
   ochistit();
   if (location.hash === '#versii') { versii(); return; }
+  if (location.hash === '#znakomstvo') { znakomstvo(); return; }
   if (location.hash === '#kartochki') { glava = null; kartochki(); return; }
   const m = /^#g(\d{1,2})$/.exec(location.hash);
   const n = m && GLAVY.some((g) => g.n === Number(m[1])) ? Number(m[1]) : null;
-  if (!n) { karta(); return; }
+  if (!n) { if (!chitat(KLYUCH_ZNAKOMSTVO) && !Object.keys(projdeno).length) znakomstvo(); else karta(); return; }
   if (!glava || glava.nomer !== n) {
     const moj = ++zhdu;
     const g = await zagruzit(n);
@@ -259,6 +283,11 @@ app.addEventListener('click', (e) => {
   if (b.dataset.z || d === 'ewe' || d === 'dalshe-shag') { zadacha(b); return; }
   if (d === 'zvuk') { pereklyuchit(); b.outerHTML = knopkaZvuka(); igrat('nazhatie'); }
   else if (d === 'ustanovit') ustanovit(b);
+  else if (d === 'ponyatno') { videl.add(glava.kadry[sost.kadr].vid); pisat(KLYUCH_PODSKAZKI, [...videl]); kadr(); }
+  else if (d === 'znakomstvo') { znI = 0; perejti('#znakomstvo'); }
+  else if (d === 'zn-dalshe') { znI = Math.min(KADRY.length - 1, znI + 1); znakomstvo(); }
+  else if (d === 'zn-nazad') { if (znI > 0) { znI--; znakomstvo(); } else { pisat(KLYUCH_ZNAKOMSTVO, 1); if (location.hash.length > 1) perejti(''); else karta(); } }
+  else if (d === 'zn-konec') konecZnakomstva();
   else if (d === 'glava') {
     const n = Number(b.dataset.g);
     if (glava && glava.nomer === n) idti(sost.kadr);
